@@ -1,65 +1,100 @@
-import type { Metadata } from 'next'
-import './globals.css'
-import { Nav } from '@/components/Nav'
-import { Footer } from '@/components/Footer'
-import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import "./globals.css";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
-    default: 'Olfaire — Your Scent Intelligence',
-    template: '%s · Olfaire',
+    default: "Olfaire — Your Scent Intelligence",
+    template: "%s · Olfaire",
   },
   description:
-    'Olfaire turns your perfume collection into a curated daily experience. AI-powered daily picks, layering chemistry, and fragrance intelligence — guided by Lumi.',
+    "Olfaire turns your perfume collection into a curated daily experience. AI-powered daily picks, layering chemistry, and fragrance intelligence — guided by Lumi.",
   keywords: [
-    'perfume app', 'fragrance app', 'cologne tracker', 'scent collection',
-    'perfume layering', 'fragrance AI', 'Lumi', 'Olfaire', 'daily fragrance',
-    'perfume recommendation', 'fragrance DNA', 'oud', 'parfum', 'niche fragrance',
+    "perfume app",
+    "fragrance app",
+    "cologne tracker",
+    "scent collection",
+    "perfume layering",
+    "fragrance AI",
+    "Lumi",
+    "Olfaire",
+    "daily fragrance",
+    "perfume recommendation",
+    "fragrance DNA",
+    "oud",
+    "parfum",
+    "niche fragrance",
   ],
-  authors: [{ name: 'Olfaire' }],
-  creator: 'Olfaire',
+  authors: [{ name: "Olfaire" }],
+  creator: "Olfaire",
   openGraph: {
-    type:        'website',
-    locale:      'en_US',
-    url:         'https://olfaire.app',
-    siteName:    'Olfaire',
-    title:       'Olfaire — Your Scent Intelligence',
-    description: 'AI-powered daily fragrance picks and layering chemistry for serious collectors.',
-    images: [{
-      url:    'https://olfaire.app/og.jpg',
-      width:  1200,
-      height: 630,
-      alt:    'Olfaire — Your Scent Intelligence',
-    }],
+    type: "website",
+    locale: "en_US",
+    url: "https://olfaire.app",
+    siteName: "Olfaire",
+    title: "Olfaire — Your Scent Intelligence",
+    description:
+      "AI-powered daily fragrance picks and layering chemistry for serious collectors.",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Olfaire — Your Scent Intelligence",
+      },
+    ],
   },
   twitter: {
-    card:        'summary_large_image',
-    title:       'Olfaire — Your Scent Intelligence',
-    description: 'AI-powered daily fragrance picks and layering chemistry for serious collectors.',
-    images:      ['https://olfaire.app/og.jpg'],
+    card: "summary_large_image",
+    title: "Olfaire — Your Scent Intelligence",
+    description:
+      "AI-powered daily fragrance picks and layering chemistry for serious collectors.",
+    images: ["/og.png"],
   },
-  metadataBase: new URL('https://olfaire.app'),
+  metadataBase: new URL("https://olfaire.app"),
   robots: {
-    index:  true,
+    index: true,
     follow: true,
   },
-}
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", inter.variable)}>
+    <html
+      lang="en"
+      className={cn("font-sans", cormorant.variable, dmSans.variable)}
+    >
       <body className="grain">
         <Nav />
         <main>{children}</main>
         <Footer />
       </body>
     </html>
-  )
+  );
 }

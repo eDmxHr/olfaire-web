@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { LumiMark } from "./LumiMark";
+import { LumiMark } from "./lumi-mark";
+import { Eyebrow } from "@/components/ui/eyebrow";
 
 export function Footer() {
   return (
@@ -22,7 +23,7 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <p className="eyebrow text-ash mb-4">Product</p>
+            <Eyebrow variant="ash" className="mb-4">Product</Eyebrow>
             <div className="flex flex-col gap-3">
               {[
                 { href: "/about", label: "About Olfaire" },
@@ -42,7 +43,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <p className="eyebrow text-ash mb-4">Legal</p>
+            <Eyebrow variant="ash" className="mb-4">Legal</Eyebrow>
             <div className="flex flex-col gap-3">
               {[
                 { href: "/privacy", label: "Privacy Policy" },

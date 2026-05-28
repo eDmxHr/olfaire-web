@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { LumiMark } from './LumiMark'
+import { LumiMark } from './lumi-mark'
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
@@ -27,10 +27,7 @@ export function Nav() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <LumiMark size={28} wingColor="#1C1A18" bodyColor="#B07D2A" />
-          <span
-            className="serif text-xl font-light tracking-[0.12em] text-ink"
-            style={{ letterSpacing: '0.12em' }}
-          >
+          <span className="serif text-xl font-light tracking-[0.12em] text-ink">
             Olfaire
           </span>
         </Link>
@@ -87,7 +84,7 @@ export function Nav() {
             <Link
               key={href}
               href={href}
-              className="text-ink text-base"
+              className="text-ink text-base font-light tracking-wide"
               onClick={() => setOpen(false)}
             >
               {label}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import {
   Accordion,
   AccordionItem,
@@ -53,7 +54,7 @@ export default function SupportPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-16">
-          <p className="eyebrow text-amber mb-4">Support</p>
+          <Eyebrow className="mb-4">Support</Eyebrow>
           <h1 className="serif text-5xl font-light text-ink mb-6">
             How can we help?
           </h1>
@@ -71,7 +72,7 @@ export default function SupportPage() {
 
         {/* FAQ */}
         <div className="mb-16">
-          <p className="eyebrow text-ash mb-8">Frequently asked</p>
+          <Eyebrow variant="ash" className="mb-8">Frequently asked</Eyebrow>
           <Accordion defaultValue={["0"]}>
             {faqs.map(({ q, a }, i) => (
               <AccordionItem key={i} value={String(i)}>
@@ -89,7 +90,7 @@ export default function SupportPage() {
             href="mailto:lumi@olfaire.app"
             className="group block p-6 bg-linen rounded-2xl hover:bg-dust/40 transition-colors"
           >
-            <p className="eyebrow text-ash mb-2">Email</p>
+            <Eyebrow variant="ash" className="mb-2">Email</Eyebrow>
             <p className="serif text-lg font-light text-ink mb-1 group-hover:text-amber transition-colors">
               lumi@olfaire.app
             </p>
@@ -100,7 +101,7 @@ export default function SupportPage() {
             href="mailto:lumi@olfaire.app"
             className="group block p-6 bg-linen rounded-2xl hover:bg-dust/40 transition-colors"
           >
-            <p className="eyebrow text-ash mb-2">Privacy</p>
+            <Eyebrow variant="ash" className="mb-2">Privacy</Eyebrow>
             <p className="serif text-lg font-light text-ink mb-1 group-hover:text-amber transition-colors">
               lumi@olfaire.app
             </p>

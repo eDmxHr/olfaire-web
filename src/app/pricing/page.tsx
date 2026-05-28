@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
-import { WaitlistForm } from '@/components/WaitlistForm'
+import { WaitlistForm } from '@/components/waitlist-form'
+import { Eyebrow } from '@/components/ui/eyebrow'
+import { Badge } from '@/components/ui/badge'
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -34,8 +36,8 @@ export default function PricingPage() {
 
         {/* Header */}
         <div className="text-center mb-20">
-          <p className="eyebrow text-amber mb-4">Pricing</p>
-          <h1 className="serif text-5xl md:text-6xl font-light text-ink mb-6">
+          <Eyebrow className="mb-4">Pricing</Eyebrow>
+          <h1 className="serif text-5xl md:text-6xl font-light text-ink mb-6 leading-[1.1] tracking-[0.02em]">
             Simple, honest pricing.
           </h1>
           <p className="text-ash text-lg max-w-xl mx-auto leading-relaxed">
@@ -49,7 +51,7 @@ export default function PricingPage() {
           {/* Free */}
           <div className="bg-linen rounded-2xl p-8">
             <div className="mb-8">
-              <p className="eyebrow text-ash mb-3">Free</p>
+              <Eyebrow variant="ash" className="mb-3">Free</Eyebrow>
               <div className="flex items-end gap-1">
                 <span className="serif text-5xl font-light text-ink">$0</span>
               </div>
@@ -81,10 +83,8 @@ export default function PricingPage() {
             />
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-3">
-                <p className="eyebrow text-amber">Premium</p>
-                <span className="text-[10px] px-3 py-1 rounded-full bg-amber/20 text-amber border border-amber/30 tracking-wide">
-                  POPULAR
-                </span>
+                <Eyebrow variant="dark">Premium</Eyebrow>
+                <Badge className="bg-amber/20 text-amber border-amber/30">POPULAR</Badge>
               </div>
               <div className="flex items-end gap-1 mb-1">
                 <span className="serif text-5xl font-light text-parchment">$4.99</span>
@@ -111,12 +111,10 @@ export default function PricingPage() {
           {/* Annual */}
           <div className="bg-linen rounded-2xl p-8 border-2 border-amber/30 relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="bg-amber text-parchment text-[10px] px-4 py-1 rounded-full tracking-wide font-medium">
-                33% OFF
-              </span>
+              <Badge className="bg-amber text-parchment border-amber font-medium">33% OFF</Badge>
             </div>
             <div className="mb-8 mt-2">
-              <p className="eyebrow text-ash mb-3">Premium Annual</p>
+              <Eyebrow variant="ash" className="mb-3">Premium Annual</Eyebrow>
               <div className="flex items-end gap-1 mb-1">
                 <span className="serif text-5xl font-light text-ink">$39.99</span>
                 <span className="text-ash text-sm mb-2">/year</span>
@@ -144,11 +142,11 @@ export default function PricingPage() {
         <div className="bg-linen rounded-2xl p-8 md:p-12 mb-20">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <p className="eyebrow text-amber mb-3">Lifetime</p>
-              <h2 className="serif text-4xl font-light text-ink mb-4">
+              <Eyebrow className="mb-3">Lifetime</Eyebrow>
+              <h2 className="serif text-4xl font-light text-ink mb-4 leading-[1.1] tracking-[0.02em]">
                 Own it forever.
               </h2>
-              <p className="text-ash leading-relaxed mb-6">
+              <p className="text-ash text-base leading-relaxed mb-6">
                 One payment. Every feature, now and in the future. For the collector who knows they're in this for the long term.
               </p>
               <div className="flex items-end gap-2 mb-6">
@@ -181,7 +179,7 @@ export default function PricingPage() {
 
         {/* Launch pricing note */}
         <div className="text-center p-8 border border-amber/20 rounded-2xl bg-amber/5 mb-20">
-          <p className="eyebrow text-amber mb-3">Launch pricing</p>
+          <Eyebrow className="mb-3">Launch pricing</Eyebrow>
           <p className="serif text-2xl font-light text-ink mb-3">
             First 500 subscribers get early adopter pricing.
           </p>

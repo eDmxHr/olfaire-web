@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Eyebrow } from "@/components/ui/eyebrow";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -11,7 +12,7 @@ export default function PrivacyPage() {
     <div className="pt-32 pb-24 px-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-12">
-          <p className="eyebrow text-amber mb-4">Legal</p>
+          <Eyebrow className="mb-4">Legal</Eyebrow>
           <h1 className="serif text-5xl font-light text-ink mb-4">
             Privacy Policy
           </h1>
@@ -97,8 +98,8 @@ export default function PrivacyPage() {
                 "To send you transactional emails (account confirmation, subscription receipts)",
                 "To improve Olfaire's fragrance database and suggestion quality",
               ].map((item) => (
-                <div key={item} className="flex gap-3">
-                  <span className="text-amber mt-1 flex-shrink-0">✦</span>
+                <div key={item} className="flex items-center gap-3">
+                  <span className="text-amber flex-shrink-0">✦</span>
                   <p className="text-sm">{item}</p>
                 </div>
               ))}
@@ -128,7 +129,7 @@ export default function PrivacyPage() {
                   desc: "City-level weather data for context in daily suggestions. Only your city name is transmitted — no GPS coordinates.",
                 },
               ].map(({ name, desc }) => (
-                <div key={name} className="border-l-2 border-dust pl-4">
+                <div key={name}>
                   <p className="text-ink text-sm font-medium mb-1">{name}</p>
                   <p className="text-sm">{desc}</p>
                 </div>
@@ -165,8 +166,8 @@ export default function PrivacyPage() {
                 "Export your collection data",
                 "Opt out of non-essential communications",
               ].map((right) => (
-                <div key={right} className="flex gap-3">
-                  <span className="text-amber mt-1 flex-shrink-0">✦</span>
+                <div key={right} className="flex items-center gap-3">
+                  <span className="text-amber flex-shrink-0">✦</span>
                   <p className="text-sm">You have the right to: {right}</p>
                 </div>
               ))}

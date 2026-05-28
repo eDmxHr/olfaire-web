@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap");
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -27,23 +26,22 @@ html {
 body {
   background-color: var(--parchment);
   color: var(--ink);
-  font-family: "DM Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Eyebrow label utility */
 .eyebrow {
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 500;
 }
 
 /* Lumi serif display */
 .serif {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-serif), Georgia, serif;
 }
 
 /* Grain texture overlay */

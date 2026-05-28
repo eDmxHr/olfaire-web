@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { LumiMark } from "@/components/LumiMark";
+import { LumiMark } from "@/components/lumi-mark";
+import { Eyebrow } from "@/components/ui/eyebrow";
 
 export const metadata: Metadata = {
   title: "About",
@@ -13,8 +14,8 @@ export default function AboutPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-20">
-          <p className="eyebrow text-amber mb-6">About</p>
-          <h1 className="serif text-5xl md:text-6xl font-light text-ink leading-tight mb-8">
+          <Eyebrow className="mb-6">About</Eyebrow>
+          <h1 className="serif text-5xl md:text-6xl font-light text-ink leading-[1.1] tracking-[0.02em] mb-8">
             Built for the collector who reads Fragrantica.
           </h1>
           <p className="text-ash text-lg leading-relaxed">
@@ -24,7 +25,7 @@ export default function AboutPage() {
         </div>
 
         {/* Story */}
-        <div className="space-y-8 text-ash leading-relaxed mb-20">
+        <div className="space-y-8 text-ash text-base leading-relaxed mb-20">
           <p>
             The fragrance world has no shortage of information. Reviews, lists,
             community ratings, note pyramids. What it lacks is intelligence —
@@ -50,7 +51,7 @@ export default function AboutPage() {
           <div className="flex items-center gap-4 mb-8">
             <LumiMark size={48} wingColor="#FAF9F6" bodyColor="#B07D2A" />
             <div>
-              <p className="eyebrow text-amber mb-1">Lumi</p>
+              <Eyebrow variant="dark" className="mb-1">Lumi</Eyebrow>
               <p className="serif text-2xl font-light text-parchment">
                 Olfaire's intelligence
               </p>
@@ -75,7 +76,7 @@ export default function AboutPage() {
 
         {/* Values */}
         <div className="mb-20">
-          <p className="eyebrow text-ash mb-8">What we believe</p>
+          <Eyebrow variant="ash" className="mb-8">What we believe</Eyebrow>
           <div className="space-y-8">
             {[
               {
@@ -107,7 +108,7 @@ export default function AboutPage() {
 
         {/* Contact */}
         <div className="text-center p-8 bg-linen rounded-2xl">
-          <p className="eyebrow text-ash mb-4">Get in touch</p>
+          <Eyebrow variant="ash" className="mb-4">Get in touch</Eyebrow>
           <p className="serif text-2xl font-light text-ink mb-4">
             Questions, feedback, or just want to talk fragrance?
           </p>

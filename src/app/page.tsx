@@ -1,11 +1,16 @@
-import { LumiMark } from "@/components/LumiMark";
-import { WaitlistForm } from "@/components/WaitlistForm";
+import { LumiMark } from "@/components/lumi-mark";
+import { WaitlistForm } from "@/components/waitlist-form";
+import { Eyebrow } from "@/components/ui/eyebrow";
+import { FeatureItem } from "@/components/ui/feature-item";
 
 export default function HomePage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section id="hero" className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden">
+      <section
+        id="hero"
+        className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 relative overflow-hidden"
+      >
         {/* Subtle background texture */}
         <div
           className="absolute inset-0 opacity-30"
@@ -22,7 +27,7 @@ export default function HomePage() {
           </div>
 
           {/* Eyebrow */}
-          <p className="eyebrow text-amber mb-6">Introducing Olfaire</p>
+          <Eyebrow className="mb-6">Introducing Olfaire</Eyebrow>
 
           {/* Headline */}
           <h1 className="serif text-5xl md:text-7xl font-light leading-[1.1] tracking-[0.02em] text-ink mb-6">
@@ -31,7 +36,7 @@ export default function HomePage() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-ash text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-12 font-light">
+          <p className="text-ash text-lg md:text-xl leading-relaxed max-w-xl mx-auto mb-12">
             Daily picks based on your mood. Layering chemistry that actually
             explains the science. A fragrance guide who speaks like she knows
             what she's talking about.
@@ -45,7 +50,7 @@ export default function HomePage() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <p className="eyebrow text-ash">Scroll</p>
+          <Eyebrow variant="ash">Scroll</Eyebrow>
           <div className="w-px h-8 bg-dust" />
         </div>
       </section>
@@ -55,8 +60,10 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="eyebrow text-amber mb-6">Meet Lumi</p>
-              <h2 className="serif text-4xl md:text-5xl font-light leading-tight mb-8">
+              <Eyebrow variant="dark" className="mb-6">
+                Meet Lumi
+              </Eyebrow>
+              <h2 className="serif text-4xl md:text-5xl font-light leading-[1.1] tracking-[0.02em] mb-8">
                 A fragrance guide who speaks like she knows what she's talking
                 about.
               </h2>
@@ -104,7 +111,7 @@ export default function HomePage() {
               ))}
               <div className="flex items-center gap-2 pl-2">
                 <LumiMark size={20} wingColor="#FAF9F6" bodyColor="#B07D2A" />
-                <p className="eyebrow text-amber">Lumi</p>
+                <Eyebrow variant="dark">Lumi</Eyebrow>
               </div>
             </div>
           </div>
@@ -115,8 +122,8 @@ export default function HomePage() {
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-20">
-            <p className="eyebrow text-amber mb-4">What Olfaire does</p>
-            <h2 className="serif text-4xl md:text-5xl font-light text-ink">
+            <Eyebrow className="mb-4">What Olfaire does</Eyebrow>
+            <h2 className="serif text-4xl md:text-5xl font-light text-ink tracking-[0.02em] leading-[1.1]">
               Three things, done right.
             </h2>
           </div>
@@ -183,8 +190,8 @@ export default function HomePage() {
       {/* ── Collection manager ───────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-dust">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow text-amber mb-6">Your collection</p>
-          <h2 className="serif text-4xl md:text-5xl font-light text-ink mb-8 leading-tight">
+          <Eyebrow className="mb-6">Your collection</Eyebrow>
+          <h2 className="serif text-4xl md:text-5xl font-light text-ink mb-8 leading-[1.1] tracking-[0.02em]">
             Every bottle you own,{" "}
             <span className="italic">intelligently organised.</span>
           </h2>
@@ -205,7 +212,7 @@ export default function HomePage() {
                 <p className="serif text-4xl font-light text-ink mb-1">
                   {number}
                 </p>
-                <p className="eyebrow text-ash">{label}</p>
+                <Eyebrow variant="ash">{label}</Eyebrow>
               </div>
             ))}
           </div>
@@ -217,35 +224,25 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="eyebrow text-amber mb-6">Who it's for</p>
-              <h2 className="serif text-4xl font-light text-ink leading-tight mb-8">
+              <Eyebrow className="mb-6">Who it&#39;s for</Eyebrow>
+              <h2 className="serif text-4xl md:text-5xl font-light text-ink leading-[1.1] tracking-[0.02em] mb-8">
                 Built for people who take fragrance seriously.
               </h2>
               <div className="space-y-6">
-                {[
-                  {
-                    title: "The Collector",
-                    desc: "Owns 15–60 bottles. Reads Fragrantica. Frustrated that half her shelf never gets worn. Wants a rotation that feels intentional.",
-                  },
-                  {
-                    title: "The Explorer",
-                    desc: "Growing collection. Wants to understand layering but doesn't know where to start. Craves a trusted guide.",
-                  },
-                  {
-                    title: "The Social One",
-                    desc: "Trend-aware. Follows fragrance creators. Loves sharing her rotation. Drives organic growth through shareable signature cards.",
-                  },
-                ].map(({ title, desc }) => (
-                  <div key={title} className="flex gap-4">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber mt-2 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-ink text-sm mb-1">
-                        {title}
-                      </p>
-                      <p className="text-ash text-sm leading-relaxed">{desc}</p>
-                    </div>
-                  </div>
-                ))}
+                <FeatureItem title="The Collector">
+                  Owns 15–60 bottles. Reads Fragrantica. Frustrated that half
+                  her shelf never gets worn. Wants a rotation that feels
+                  intentional.
+                </FeatureItem>
+                <FeatureItem title="The Explorer">
+                  Growing collection. Wants to understand layering but
+                  doesn&apos;t know where to start. Craves a trusted guide.
+                </FeatureItem>
+                <FeatureItem title="The Social One">
+                  Trend-aware. Follows fragrance creators. Loves sharing her
+                  rotation. Drives organic growth through shareable signature
+                  cards.
+                </FeatureItem>
               </div>
             </div>
 
@@ -298,18 +295,18 @@ export default function HomePage() {
       {/* ── Pricing teaser ───────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-dust">
         <div className="max-w-2xl mx-auto text-center">
-          <p className="eyebrow text-amber mb-6">Pricing</p>
-          <h2 className="serif text-4xl font-light text-ink mb-6">
+          <Eyebrow className="mb-6">Pricing</Eyebrow>
+          <h2 className="serif text-4xl md:text-5xl font-light text-ink mb-6 tracking-[0.02em] leading-[1.1]">
             Free to start. Premium when you're ready.
           </h2>
-          <p className="text-ash leading-relaxed mb-8">
+          <p className="text-ash text-base leading-relaxed mb-8">
             The free tier is genuinely useful — daily suggestions, basic
             layering, your first signature. Upgrade when your collection
             outgrows it.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="#waitlist"
+              href="#hero"
               className="bg-ink text-parchment px-8 py-4 rounded-full text-sm font-medium tracking-wide hover:bg-amber transition-colors duration-200"
             >
               Join the waitlist
@@ -325,7 +322,10 @@ export default function HomePage() {
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────────── */}
-      <section id="waitlist" className="py-24 px-6 bg-ink text-parchment scroll-mt-16">
+      <section
+        id="waitlist"
+        className="py-24 px-6 bg-ink text-parchment scroll-mt-16"
+      >
         <div className="max-w-xl mx-auto text-center">
           <LumiMark
             size={48}
@@ -333,7 +333,7 @@ export default function HomePage() {
             bodyColor="#B07D2A"
             className="mx-auto mb-8"
           />
-          <h2 className="serif text-4xl md:text-5xl font-light leading-tight mb-4">
+          <h2 className="serif text-4xl md:text-5xl font-light leading-[1.1] tracking-[0.02em] mb-4">
             Be first to meet Lumi.
           </h2>
           <p className="serif text-lg font-light italic text-parchment/60 mb-10">
