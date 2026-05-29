@@ -5,9 +5,9 @@ import { Resend } from "resend";
 export async function POST(req: NextRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
-  const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY!);
+  const resend = new Resend(process.env.RESEND_API_KEY!);
   try {
     const { email } = await req.json();
 
