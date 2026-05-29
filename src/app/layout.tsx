@@ -25,11 +25,11 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Olfaire — Your Scent Intelligence",
+    default: "Olfaire — AI Fragrance Intelligence for Serious Collectors",
     template: "%s · Olfaire",
   },
   description:
-    "Olfaire turns your perfume collection into a curated daily experience. AI-powered daily picks, layering chemistry, and fragrance intelligence — guided by Lumi.",
+    "Olfaire turns your perfume collection into a curated daily ritual. Get AI-powered fragrance picks, layering chemistry, and a personalised Fragrance DNA profile — guided by Lumi, your scent companion.",
   keywords: [
     "perfume app",
     "fragrance app",
@@ -48,6 +48,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Olfaire" }],
   creator: "Olfaire",
+  publisher: "Olfaire",
   openGraph: {
     type: "website",
     locale: "en_US",
