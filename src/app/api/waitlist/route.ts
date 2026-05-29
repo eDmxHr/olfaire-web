@@ -9,7 +9,24 @@ export async function POST(req: NextRequest) {
   );
   const resend = new Resend(process.env.RESEND_API_KEY!);
   try {
-    const { email } = await req.json();
+    const { email, token } = await req.json();
+
+    // Verify Turnstile token
+    const verifyRes = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: process.env.TURNSTILE_SECRET_KEY,
+          response: token,
+        }),
+      },
+    );
+    const verifyData = await verifyRes.json();
+    if (!verifyData.success) {
+      return NextResponse.json({ error: "Bot check failed." }, { status: 400 });
+    }
 
     if (!email || !email.includes("@")) {
       return NextResponse.json(

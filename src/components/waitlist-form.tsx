@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +11,8 @@ type FormValues = { email: string };
 export function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const turnstileRef = useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const {
     register,
@@ -19,11 +22,13 @@ export function WaitlistForm() {
   } = useForm<FormValues>();
 
   const onSubmit = async ({ email }: FormValues) => {
+    const token = turnstileToken;
+
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token }),
       });
 
       const data = await res.json();
@@ -35,10 +40,14 @@ export function WaitlistForm() {
       } else {
         setStatus("error");
         setMessage(data.error ?? "Something went wrong. Try again.");
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
       }
     } catch {
       setStatus("error");
       setMessage("Something went wrong. Try again.");
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     }
   };
 
@@ -70,6 +79,15 @@ export function WaitlistForm() {
           {isSubmitting ? "Joining..." : "Join waitlist"}
         </Button>
       </div>
+
+      <Turnstile
+        ref={turnstileRef}
+        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+        options={{ size: "invisible" }}
+        onSuccess={(token) => setTurnstileToken(token)}
+        onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileToken(null)}
+      />
 
       {(errors.email || status === "error") && (
         <p className="mt-2 text-xs text-red pl-2">

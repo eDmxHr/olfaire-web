@@ -29,6 +29,10 @@ export const thirdParties: ThirdParty[] = [
     name: "Weather",
     desc: "City-level weather context for daily suggestions. Only your city name is used — no GPS coordinates or precise location.",
   },
+  {
+    name: "Bot protection",
+    desc: "We use Cloudflare Turnstile to distinguish human visitors from bots. It collects your IP address, TLS fingerprint, and browser user-agent to assess whether a request is automated. No personal identifiers are extracted from these signals. For data protection questions, contact Cloudflare's DPO at dpo@cloudflare.com.",
+  },
 ];
 
 export const userRights: string[] = [
