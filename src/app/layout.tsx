@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
@@ -93,6 +94,7 @@ export default function RootLayout({
       className={cn("font-sans", cormorant.variable, dmSans.variable)}
     >
       <body className="grain">
+        <ScrollProgress />
         <Nav />
         <main>{children}</main>
         <Footer />

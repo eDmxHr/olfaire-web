@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { PageWrapper } from "@/components/ui/page-wrapper";
+import { Heading } from "@/components/ui/heading";
 
 export const metadata: Metadata = {
   title: "Why most layering advice fails",
@@ -10,8 +12,7 @@ export const metadata: Metadata = {
 
 export default function LayeringAdvicePost() {
   return (
-    <div className="pt-32 pb-24 px-6">
-      <div className="max-w-2xl mx-auto">
+    <PageWrapper maxWidth="md">
         {/* Back */}
         <Link
           href="/blog"
@@ -30,10 +31,10 @@ export default function LayeringAdvicePost() {
             <span className="text-ash text-xs">·</span>
             <span className="text-ash text-xs">May 1, 2026</span>
           </div>
-          <h1 className="serif text-4xl md:text-5xl font-light text-ink leading-tight mb-6">
+          <Heading as="h1" size="page" className="mb-6">
             Why most layering advice fails — and what the chemistry actually
             says
-          </h1>
+          </Heading>
           <p className="serif text-xl font-light italic text-ash leading-relaxed">
             Most layering guides tell you what smells good together. Almost none
             explain why.
@@ -57,9 +58,9 @@ export default function LayeringAdvicePost() {
             own.
           </p>
 
-          <h2 className="serif text-2xl font-light text-ink mt-10 mb-4">
+          <Heading as="h2" size="card" className="mt-10 mb-4">
             The note pyramid is not a static list
-          </h2>
+          </Heading>
 
           <p>
             Every fragrance has top, heart, and base notes. Most people know
@@ -84,9 +85,9 @@ export default function LayeringAdvicePost() {
             bases will determine what you smell like at the end of the day.
           </p>
 
-          <h2 className="serif text-2xl font-light text-ink mt-10 mb-4">
+          <Heading as="h2" size="card" className="mt-10 mb-4">
             The four types of note interaction
-          </h2>
+          </Heading>
 
           <p>
             When notes from two fragrances meet on skin, they do one of four
@@ -134,9 +135,9 @@ export default function LayeringAdvicePost() {
             </div>
           </div>
 
-          <h2 className="serif text-2xl font-light text-ink mt-10 mb-4">
+          <Heading as="h2" size="card" className="mt-10 mb-4">
             What skin does to all of this
-          </h2>
+          </Heading>
 
           <p>
             Chemistry doesn't happen in the bottle. It happens on skin. And skin
@@ -159,9 +160,9 @@ export default function LayeringAdvicePost() {
             combination might tell an entirely different story.
           </p>
 
-          <h2 className="serif text-2xl font-light text-ink mt-10 mb-4">
+          <Heading as="h2" size="card" className="mt-10 mb-4">
             The practical implication
-          </h2>
+          </Heading>
 
           <p>Before layering two fragrances, ask three questions:</p>
 
@@ -232,7 +233,6 @@ export default function LayeringAdvicePost() {
             </p>
           </Link>
         </div>
-      </div>
-    </div>
+    </PageWrapper>
   );
 }

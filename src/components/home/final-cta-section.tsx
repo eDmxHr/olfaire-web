@@ -1,28 +1,35 @@
 import { LumiMark } from "@/components/lumi-mark";
 import { WaitlistForm } from "@/components/waitlist-form";
+import { SectionWrapper } from "@/components/ui/section-wrapper";
+import { Heading } from "@/components/ui/heading";
+import { colors } from "@/lib/colors";
+import { FadeUp } from "@/components/ui/animate";
 
 export function FinalCtaSection() {
   return (
-    <section
+    <SectionWrapper
       id="waitlist"
-      className="py-24 px-6 bg-ink text-parchment scroll-mt-16"
+      className="bg-ink text-parchment scroll-mt-16"
+      maxWidth="md"
+      innerClassName="text-center"
     >
-      <div className="max-w-xl mx-auto text-center">
+      <FadeUp duration={0.8}>
         <LumiMark
           size={48}
-          wingColor="#FAF9F6"
-          bodyColor="#B07D2A"
+          wingColor={colors.parchment}
           className="mx-auto mb-8"
         />
-        <h2 className="serif text-4xl md:text-5xl font-light leading-[1.1] tracking-[0.02em] mb-4">
+        <Heading as="h2" size="section" className="text-parchment mb-4">
           Be first to meet Lumi.
-        </h2>
+        </Heading>
         <p className="serif text-lg font-light italic text-parchment/60 mb-10">
           "Something refined is being built. Early access comes with early
           pricing."
         </p>
+      </FadeUp>
+      <FadeUp delay={0.2}>
         <WaitlistForm />
-      </div>
-    </section>
+      </FadeUp>
+    </SectionWrapper>
   );
 }

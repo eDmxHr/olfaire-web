@@ -1,48 +1,33 @@
-import Image from "next/image";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { FeatureItem } from "@/components/ui/feature-item";
+import { SectionWrapper } from "@/components/ui/section-wrapper";
+import { Heading } from "@/components/ui/heading";
+import { PhoneParallax } from "@/components/home/phone-parallax";
+import { FadeUp, StaggerChildren, StaggerItem } from "@/components/ui/animate";
+import { personas } from "@/data/home";
 
 export function ForTheCollectorSection() {
   return (
-    <section className="py-24 px-6 bg-linen">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <Eyebrow className="mb-6">Who it&#39;s for</Eyebrow>
-            <h2 className="serif text-4xl md:text-5xl font-light text-ink leading-[1.1] tracking-[0.02em] mb-8">
-              Built for people who take fragrance seriously.
-            </h2>
-            <div className="space-y-6">
-              <FeatureItem title="The Collector">
-                Owns 15–60 bottles. Reads Fragrantica. Frustrated that half her
-                shelf never gets worn. Wants a rotation that feels intentional.
-              </FeatureItem>
-              <FeatureItem title="The Explorer">
-                Growing collection. Wants to understand layering but
-                doesn&apos;t know where to start. Craves a trusted guide.
-              </FeatureItem>
-              <FeatureItem title="The Social One">
-                Trend-aware. Follows fragrance creators. Loves sharing her
-                rotation. Drives organic growth through shareable signature
-                cards.
-              </FeatureItem>
-            </div>
-          </div>
+    <SectionWrapper className="bg-linen" maxWidth="lg">
+      <div className="grid md:grid-cols-2 gap-16 items-center">
+        <FadeUp>
+          <Eyebrow className="mb-6">Who it&#39;s for</Eyebrow>
+          <Heading as="h2" size="section" className="mb-8">
+            Built for people who take fragrance seriously.
+          </Heading>
+          <StaggerChildren className="space-y-6" stagger={0.1} delay={0.2}>
+            {personas.map((persona) => (
+              <StaggerItem key={persona.title}>
+                <FeatureItem title={persona.title}>
+                  {persona.description}
+                </FeatureItem>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        </FadeUp>
 
-          <div className="flex justify-center items-center">
-            <div className="phone-mockframe w-[300px]">
-              <div className="phone-screen bg-ink overflow-hidden relative">
-                <Image
-                  src="/assets/home.png"
-                  alt="Olfaire app"
-                  fill
-                  className="object-cover object-top"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <PhoneParallax />
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

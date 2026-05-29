@@ -1,32 +1,46 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { LumiMark } from './lumi-mark'
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { motion } from "motion/react";
+import { LumiMark } from "./lumi-mark";
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(false);
+  const lastY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 20);
+      // Hide when scrolling down past 80px, show when scrolling up
+      if (y > 80) {
+        setHidden(y > lastY.current);
+      } else {
+        setHidden(false);
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <motion.header
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.3, ease: [0.25, 0, 0, 1] }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
         scrolled
-          ? 'bg-parchment/95 backdrop-blur-md border-b border-dust'
-          : 'bg-transparent'
+          ? "bg-parchment/95 backdrop-blur-md border-b border-dust"
+          : "bg-transparent"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-
+      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <LumiMark size={28} wingColor="#1C1A18" bodyColor="#B07D2A" />
+          <LumiMark size={28} />
           <span className="serif text-xl font-light tracking-[0.12em] text-ink">
             Olfaire
           </span>
@@ -35,10 +49,10 @@ export function Nav() {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           {[
-            { href: '/about',   label: 'About'   },
-            { href: '/pricing', label: 'Pricing' },
-            { href: '/blog',    label: 'Journal' },
-            { href: '/support', label: 'Support' },
+            { href: "/about", label: "About" },
+            { href: "/pricing", label: "Pricing" },
+            { href: "/blog", label: "Journal" },
+            { href: "/support", label: "Support" },
           ].map(({ href, label }) => (
             <Link
               key={href}
@@ -66,9 +80,15 @@ export function Nav() {
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? 'opacity-0' : ''}`} />
-          <span className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span
+            className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? "rotate-45 translate-y-2" : ""}`}
+          />
+          <span
+            className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? "opacity-0" : ""}`}
+          />
+          <span
+            className={`block w-5 h-px bg-ink transition-all duration-200 ${open ? "-rotate-45 -translate-y-2" : ""}`}
+          />
         </button>
       </nav>
 
@@ -76,10 +96,10 @@ export function Nav() {
       {open && (
         <div className="md:hidden bg-parchment border-t border-dust px-6 py-6 flex flex-col gap-5">
           {[
-            { href: '/about',   label: 'About'   },
-            { href: '/pricing', label: 'Pricing' },
-            { href: '/blog',    label: 'Journal' },
-            { href: '/support', label: 'Support' },
+            { href: "/about", label: "About" },
+            { href: "/pricing", label: "Pricing" },
+            { href: "/blog", label: "Journal" },
+            { href: "/support", label: "Support" },
           ].map(({ href, label }) => (
             <Link
               key={href}
@@ -99,6 +119,6 @@ export function Nav() {
           </a>
         </div>
       )}
-    </header>
-  )
+    </motion.header>
+  );
 }

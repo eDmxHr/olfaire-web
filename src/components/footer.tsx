@@ -9,7 +9,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <LumiMark size={24} wingColor="#1C1A18" bodyColor="#B07D2A" />
+              <LumiMark size={24} />
               <span className="serif text-lg font-light tracking-[0.12em] text-ink">
                 Olfaire
               </span>

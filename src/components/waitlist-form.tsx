@@ -44,7 +44,7 @@ export function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <div className="flex items-center gap-3 py-4">
+      <div className="flex items-center justify-center gap-3 py-4">
         <div className="w-2 h-2 rounded-full bg-amber flex-shrink-0" />
         <p className="serif text-lg font-light italic text-ink">{message}</p>
       </div>

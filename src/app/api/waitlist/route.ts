@@ -39,26 +39,104 @@ export async function POST(req: NextRequest) {
         to: email,
         subject: "You're on the Olfaire waitlist",
         html: `
-          <div style="font-family: Georgia, serif; max-width: 480px; margin: 0 auto; padding: 40px 24px; color: #1C1A18; background: #FAF9F6;">
-            <div style="margin-bottom: 32px;">
-              <p style="font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #8C8680; font-family: sans-serif;">Olfaire</p>
-            </div>
-            <h1 style="font-size: 28px; font-weight: 300; line-height: 1.3; margin-bottom: 16px;">
-              You're on the list.
-            </h1>
-            <p style="font-size: 16px; font-style: italic; font-weight: 300; line-height: 1.65; color: #1C1A18; margin-bottom: 24px;">
-              "Something refined is being built. You'll hear from me when it's ready."
-            </p>
-            <p style="font-size: 13px; color: #8C8680; line-height: 1.6; font-family: sans-serif;">
-              — Lumi
-            </p>
-            <hr style="border: none; border-top: 1px solid #D4CFC8; margin: 32px 0;" />
-            <p style="font-size: 11px; color: #8C8680; font-family: sans-serif;">
-              You'll receive early access and launch pricing when Olfaire is live.
-              <br />
-              <a href="https://olfaire.app" style="color: #B07D2A;">olfaire.app</a>
-            </p>
-          </div>
+          <div style="background:#F8F6F2;padding:48px 20px;">
+    <div style="max-width:520px;margin:0 auto;background:#FCFBF8;border:1px solid #E7E1D8;border-radius:24px;padding:48px 40px;color:#1C1A18;box-shadow:0 4px 24px rgba(28,26,24,0.04);">
+
+    <!-- Brand -->
+    <div style="margin-bottom:40px;">
+      <p style="
+        margin:0;
+        font-family:'DM Sans',Arial,sans-serif;
+        font-size:10px;
+        letter-spacing:0.28em;
+        text-transform:uppercase;
+        color:#8A847D;
+      ">
+        Olfaire
+      </p>
+    </div>
+
+    <!-- Heading -->
+    <h1 style="
+      margin:0 0 18px;
+      font-family:'Cormorant Garamond',Georgia,serif;
+      font-size:40px;
+      line-height:1.05;
+      font-weight:400;
+      letter-spacing:-0.02em;
+      color:#1C1A18;
+    ">
+      You're on the list.
+    </h1>
+
+    <!-- Intro -->
+    <p style="
+      margin:0 0 28px;
+      font-family:'Cormorant Garamond',Georgia,serif;
+      font-size:22px;
+      line-height:1.55;
+      font-style:italic;
+      font-weight:300;
+      color:#3A342E;
+    ">
+      “Something refined is taking shape.
+      <br />
+      You'll hear from me when it’s ready.”
+    </p>
+
+    <!-- Signature -->
+    <div style="margin-bottom:36px;">
+      <p style="
+        margin:0;
+        font-family:'DM Sans',Arial,sans-serif;
+        font-size:13px;
+        color:#8A847D;
+        letter-spacing:0.04em;
+      ">
+        — Lumi
+      </p>
+    </div>
+
+    <!-- Divider -->
+    <div style="
+      height:1px;
+      background:linear-gradient(to right, transparent, #D8D1C7, transparent);
+      margin:36px 0;
+    "></div>
+
+    <!-- Footer -->
+    <p style="
+      margin:0 0 18px;
+      font-family:'DM Sans',Arial,sans-serif;
+      font-size:13px;
+      line-height:1.8;
+      color:#6E6861;
+    ">
+      You'll receive early access and launch pricing when Olfaire is live.
+    </p>
+
+    <!-- CTA -->
+    <a
+      href="https://olfaire.app"
+      style="
+        display:inline-block;
+        padding:12px 22px;
+        border:1px solid #C7A56A;
+        border-radius:999px;
+        text-decoration:none;
+        font-family:'DM Sans',Arial,sans-serif;
+        font-size:12px;
+        letter-spacing:0.08em;
+        text-transform:uppercase;
+        color:#9C6C1E;
+        background:#FFFDFC;
+      "
+    >
+      Visit olfaire.app
+    </a>
+
+  </div>
+</div>
         `,
       });
     }
