@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
 :root {
   --parchment: #faf9f6;
   --linen: #edeae3;
@@ -73,20 +70,6 @@ body {
   border-radius: 34px;
   overflow: hidden;
   aspect-ratio: 9/19.5;
-}
-
-/* Animate on scroll */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Amber underline hover */

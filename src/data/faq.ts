@@ -26,7 +26,7 @@ export const faqs: Faq[] = [
   },
   {
     q: "How is my fragrance collection data used?",
-    a: "Your collection data is used only to power Lumi's suggestions. A minimal, anonymised subset (fragrance names and notes) is sent to the Claude API to generate recommendations. Your name, email, and account details are never included in these requests.",
+    a: "Your collection data is used only to power Lumi's suggestions. A minimal, anonymised subset (fragrance names and notes) is sent to our AI provider to generate recommendations. Your name, email, and account details are never included in these requests.",
   },
   {
     q: "What happens when I delete my account?",

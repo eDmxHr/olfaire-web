@@ -10,7 +10,7 @@ export function PhoneParallax() {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
     <div ref={ref} className="flex justify-center items-center">

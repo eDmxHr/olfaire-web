@@ -17,9 +17,9 @@ export function FeaturesSection() {
 
       <StaggerChildren className="grid md:grid-cols-3 gap-8" stagger={0.1}>
         {features.map((feature) => (
-          <StaggerItem key={feature.title}>
+          <StaggerItem key={feature.title} className="h-full">
             {feature.variant === "dark" ? (
-              <div className="group bg-ink rounded-2xl p-8 relative overflow-hidden cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-2">
+              <div className="group bg-ink rounded-2xl p-8 relative overflow-hidden cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-2 h-full">
                 <div
                   className="absolute inset-0 opacity-20"
                   style={{
@@ -37,7 +37,7 @@ export function FeaturesSection() {
                 </div>
               </div>
             ) : (
-              <div className="group bg-linen rounded-2xl p-8 cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-2">
+              <div className="group bg-linen rounded-2xl p-8 cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-2 h-full">
                 <div className="w-10 h-10 rounded-full bg-ink flex items-center justify-center mb-6">
                   <span className="text-amber text-lg">{feature.icon}</span>
                 </div>

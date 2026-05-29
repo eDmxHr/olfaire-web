@@ -51,7 +51,7 @@ export function Nav() {
           {[
             { href: "/about", label: "About" },
             { href: "/pricing", label: "Pricing" },
-            { href: "/blog", label: "Journal" },
+            { href: "/blog", label: "Blog" },
             { href: "/support", label: "Support" },
           ].map(({ href, label }) => (
             <Link

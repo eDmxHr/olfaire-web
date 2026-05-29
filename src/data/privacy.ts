@@ -1,8 +1,8 @@
 export const dataUses: string[] = [
-  "To generate personalised daily suggestions and layering analysis via the Anthropic Claude API",
+  "To generate personalised daily suggestions and layering analysis",
   "To build your Fragrance DNA profile from your collection",
   "To power the weekly rotation planner and discovery features",
-  "To process subscription payments via RevenueCat and Apple",
+  "To process subscription payments securely",
   "To send you transactional emails (account confirmation, subscription receipts)",
   "To improve Olfaire's fragrance database and suggestion quality",
 ];
@@ -14,20 +14,20 @@ export interface ThirdParty {
 
 export const thirdParties: ThirdParty[] = [
   {
-    name: "Supabase",
-    desc: "Database and authentication infrastructure. Data is stored in EU regions by default.",
+    name: "Authentication",
+    desc: "Manages sign-in via Apple and Google. We do not store your password or have access to your account credentials.",
   },
   {
-    name: "Anthropic (Claude API)",
-    desc: "Your fragrance collection data and mood selections are sent to Claude to generate suggestions. No personally identifiable information (name, email, ID) is included in these requests.",
+    name: "AI processing",
+    desc: "Your fragrance data and mood selections are processed to generate personalised suggestions. No personal identifiers (name, email, or account ID) are included in these requests.",
   },
   {
-    name: "RevenueCat",
-    desc: "Subscription management. Handles payment processing through Apple and Google. We receive subscription status only — not payment card details.",
+    name: "Payments",
+    desc: "Subscription management handled through Apple and Google. We receive subscription status only — never payment card details.",
   },
   {
-    name: "OpenWeather API",
-    desc: "City-level weather data for context in daily suggestions. Only your city name is transmitted — no GPS coordinates.",
+    name: "Weather",
+    desc: "City-level weather context for daily suggestions. Only your city name is used — no GPS coordinates or precise location.",
   },
 ];
 

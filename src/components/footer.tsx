@@ -4,7 +4,7 @@ import { LumiMark } from "./lumi-mark";
 export function Footer() {
   return (
     <footer className="border-t border-dust bg-parchment">
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="md:col-span-2">
