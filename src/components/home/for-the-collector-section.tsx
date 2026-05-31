@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import homeImg from "@/../public/assets/home.png";
+import homeImg from "../../../public/assets/home.png";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { FeatureItem } from "@/components/ui/feature-item";
 import { SectionWrapper } from "@/components/ui/section-wrapper";

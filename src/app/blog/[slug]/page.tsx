@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import Image from "next/image";
-import logoImg from "@/../public/logo.png";
+import logoImg from "../../../../public/logo.png";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { PageWrapper } from "@/components/ui/page-wrapper";
 import { Heading } from "@/components/ui/heading";

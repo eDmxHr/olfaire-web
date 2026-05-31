@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Image, { type StaticImageData } from "next/image";
-import layeringImg from "@/../public/assets/layering.png";
-import lumiImg from "@/../public/assets/lumi-in-the-action.png";
+import layeringImg from "../../../public/assets/layering.png";
+import lumiImg from "../../../public/assets/lumi-in-the-action.png";
 
 interface PhoneParallaxProps {
   back?: { src: StaticImageData | string; alt: string };
