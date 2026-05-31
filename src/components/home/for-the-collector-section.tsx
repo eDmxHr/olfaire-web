@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
+import homeImg from "@/../public/assets/home.png";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { FeatureItem } from "@/components/ui/feature-item";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
@@ -42,10 +43,12 @@ export function ForTheCollectorSection() {
             <div className="phone-mockframe" style={{ width: 260 }}>
               <div className="phone-screen">
                 <Image
-                  src="/assets/home.png"
+                  src={homeImg}
                   alt="Olfaire home screen showing today's fragrance suggestion by Lumi"
                   width={260}
                   height={563}
+                  sizes="260px"
+                  placeholder="blur"
                   className="w-full h-full object-cover object-top"
                 />
               </div>

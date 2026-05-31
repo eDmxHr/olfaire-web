@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
+import Image from "next/image";
+import logoImg from "@/../public/logo.png";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { PageWrapper } from "@/components/ui/page-wrapper";
 import { Heading } from "@/components/ui/heading";
@@ -206,9 +208,11 @@ export default async function BlogPostPage({
       {/* Author */}
       <div className="mt-16 pt-8 border-t border-dust flex items-center gap-4">
         <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-          <img
-            src="/logo.png"
+          <Image
+            src={logoImg}
             alt="Olfaire"
+            width={40}
+            height={40}
             className="w-full h-full object-cover"
           />
         </div>

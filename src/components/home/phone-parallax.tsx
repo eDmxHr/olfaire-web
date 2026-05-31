@@ -2,16 +2,18 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import layeringImg from "@/../public/assets/layering.png";
+import lumiImg from "@/../public/assets/lumi-in-the-action.png";
 
 interface PhoneParallaxProps {
-  back?: { src: string; alt: string };
-  front?: { src: string; alt: string };
+  back?: { src: StaticImageData | string; alt: string };
+  front?: { src: StaticImageData | string; alt: string };
 }
 
 export function PhoneParallax({
-  back = { src: "/assets/layering.png", alt: "Olfaire app layering chemistry screen" },
-  front = { src: "/assets/lumi-in-the-action.png", alt: "Lumi AI fragrance guide suggesting a daily pick from your collection" },
+  back = { src: layeringImg, alt: "Olfaire app layering chemistry screen" },
+  front = { src: lumiImg, alt: "Lumi AI fragrance guide suggesting a daily pick from your collection" },
 }: PhoneParallaxProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -39,6 +41,8 @@ export function PhoneParallax({
               alt={back.alt}
               width={260}
               height={563}
+              sizes="260px"
+              placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
           </div>
@@ -57,6 +61,9 @@ export function PhoneParallax({
               alt={front.alt}
               width={260}
               height={563}
+              sizes="260px"
+              preload
+              placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
           </div>
@@ -72,6 +79,9 @@ export function PhoneParallax({
               alt={front.alt}
               width={260}
               height={563}
+              sizes="260px"
+              preload
+              placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
           </div>
