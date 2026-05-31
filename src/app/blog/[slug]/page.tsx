@@ -130,6 +130,38 @@ export default async function BlogPostPage({
 
   return (
     <PageWrapper maxWidth="md">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt,
+            datePublished: post.date,
+            dateModified: post.date,
+            author: {
+              "@type": "Organization",
+              name: "Olfaire",
+              url: "https://olfaire.app",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "Olfaire",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://olfaire.app/logo.png",
+              },
+            },
+            url: `https://olfaire.app/blog/${slug}`,
+            image: `https://olfaire.app/blog/${slug}/opengraph-image`,
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://olfaire.app/blog/${slug}`,
+            },
+          }),
+        }}
+      />
       {/* Back */}
       <Link
         href="/blog"

@@ -10,6 +10,7 @@ interface PostFrontmatter {
   category: string;
   excerpt: string;
   readTime: string;
+  published?: boolean;
 }
 
 interface PostMeta extends PostFrontmatter {
@@ -30,6 +31,7 @@ export function getAllPosts(): PostMeta[] {
       const { data } = matter(raw);
       return { slug, ...(data as PostFrontmatter) };
     })
+    .filter((post) => post.published !== false)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

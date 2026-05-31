@@ -122,6 +122,32 @@ export default function RootLayout({
             gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
           `}
         </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Olfaire",
+                url: "https://olfaire.app",
+                description: "AI fragrance intelligence for serious collectors",
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Olfaire",
+                url: "https://olfaire.app",
+                logo: "https://olfaire.app/logo.png",
+                contactPoint: {
+                  "@type": "ContactPoint",
+                  email: "lumi@olfaire.app",
+                  contactType: "customer service",
+                },
+              },
+            ]),
+          }}
+        />
       </body>
     </html>
   );

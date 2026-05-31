@@ -1,0 +1,22 @@
+# Olfaire
+> AI fragrance intelligence for serious collectors
+
+Olfaire is a mobile app that turns your perfume collection into a curated daily ritual. Guided by Lumi, an AI scent companion, it delivers daily fragrance picks, layering chemistry analysis, and a personalised Fragrance DNA profile.
+
+## Pages
+
+- [Home](https://olfaire.app)
+- [About](https://olfaire.app/about)
+- [Pricing](https://olfaire.app/pricing)
+- [Journal](https://olfaire.app/blog)
+- [Support](https://olfaire.app/support)
+
+## Journal
+
+- [Oud: the complete guide](https://olfaire.app/blog/oud-the-complete-guide)
+- [Why layering advice fails](https://olfaire.app/blog/why-layering-advice-fails)
+- [The pyramid is a timeline](https://olfaire.app/blog/the-pyramid-is-a-timeline)
+
+## Contact
+
+- Email: lumi@olfaire.app

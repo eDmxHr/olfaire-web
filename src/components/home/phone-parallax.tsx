@@ -10,8 +10,8 @@ interface PhoneParallaxProps {
 }
 
 export function PhoneParallax({
-  back = { src: "/assets/layering.png", alt: "Layering" },
-  front = { src: "/assets/lumi-in-the-action.png", alt: "Lumi in the action" },
+  back = { src: "/assets/layering.png", alt: "Olfaire app layering chemistry screen" },
+  front = { src: "/assets/lumi-in-the-action.png", alt: "Lumi AI fragrance guide suggesting a daily pick from your collection" },
 }: PhoneParallaxProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
