@@ -13,7 +13,10 @@ interface PhoneParallaxProps {
 
 export function PhoneParallax({
   back = { src: layeringImg, alt: "Olfaire app layering chemistry screen" },
-  front = { src: lumiImg, alt: "Lumi AI fragrance guide suggesting a daily pick from your collection" },
+  front = {
+    src: lumiImg,
+    alt: "Lumi AI fragrance guide suggesting a daily pick from your collection",
+  },
 }: PhoneParallaxProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -62,7 +65,7 @@ export function PhoneParallax({
               width={260}
               height={563}
               sizes="260px"
-              preload
+              loading="eager"
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
@@ -80,7 +83,7 @@ export function PhoneParallax({
               width={260}
               height={563}
               sizes="260px"
-              preload
+              loading="eager"
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
