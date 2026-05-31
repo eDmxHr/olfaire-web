@@ -2,14 +2,17 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { LumiMark } from "./lumi-mark";
+import { cn } from "@/lib/utils";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const lastY = useRef(0);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,7 +60,10 @@ export function Nav() {
             <Link
               key={href}
               href={href}
-              className="amber-hover text-ash hover:text-ink transition-colors text-sm tracking-wide"
+              className={cn(
+                "amber-hover text-sm tracking-wide transition-colors",
+                pathname === href ? "text-ink font-medium" : "text-ash hover:text-ink"
+              )}
             >
               {label}
             </Link>

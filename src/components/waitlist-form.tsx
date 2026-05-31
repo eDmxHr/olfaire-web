@@ -95,7 +95,7 @@ export function WaitlistForm() {
         </p>
       )}
 
-      <p className="mt-3 text-xs text-ash pl-2">
+      <p className="mt-3 text-xs text-center text-ash pl-2">
         No spam. Early access when Olfaire launches.
       </p>
     </form>

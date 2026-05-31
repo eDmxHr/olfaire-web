@@ -98,7 +98,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      scroll-behavior="smooth"
+      data-scroll-behavior="smooth"
       lang="en"
       className={cn("font-sans", cormorant.variable, dmSans.variable)}
     >

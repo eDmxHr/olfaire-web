@@ -1,12 +1,22 @@
+"use client";
+
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { FeatureItem } from "@/components/ui/feature-item";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Heading } from "@/components/ui/heading";
-import { PhoneParallax } from "@/components/home/phone-parallax";
 import { FadeUp, StaggerChildren, StaggerItem } from "@/components/ui/animate";
 import { personas } from "@/data/home";
 
 export function ForTheCollectorSection() {
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: phoneRef,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
   return (
     <SectionWrapper className="bg-linen" maxWidth="lg">
       <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -26,7 +36,19 @@ export function ForTheCollectorSection() {
           </StaggerChildren>
         </FadeUp>
 
-        <PhoneParallax />
+        <div ref={phoneRef} className="flex justify-center">
+          <motion.div style={{ y }}>
+            <div className="phone-mockframe" style={{ width: 260 }}>
+              <div className="phone-screen">
+                <img
+                  src="/assets/home.png"
+                  alt="today-screen"
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </SectionWrapper>
   );

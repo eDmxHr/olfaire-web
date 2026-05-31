@@ -58,18 +58,19 @@ body {
 .phone-mockframe {
   background: #1c1a18;
   border-radius: 44px;
-  padding: 12px;
+  padding: 8px;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 32px 80px rgba(28, 26, 24, 0.4),
-    0 8px 20px rgba(28, 26, 24, 0.2);
+    0 20px 50px rgba(28, 26, 24, 0.18),
+    0 6px 16px rgba(28, 26, 24, 0.1);
 }
 
 .phone-screen {
   background: #faf9f6;
-  border-radius: 34px;
+  border-radius: 36px;
   overflow: hidden;
   aspect-ratio: 9/19.5;
+  position: relative;
 }
 
 /* Amber underline hover */
