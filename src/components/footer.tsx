@@ -1,5 +1,13 @@
 import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InstagramIcon, TiktokIcon, RedditIcon } from "@hugeicons/core-free-icons";
 import { LumiMark } from "./lumi-mark";
+
+const socialLinks = [
+  { href: "https://instagram.com/olfaire.app", icon: InstagramIcon, label: "Instagram" },
+  { href: "https://tiktok.com/@olfaire.app", icon: TiktokIcon, label: "TikTok" },
+  { href: "https://reddit.com/u/olfaire", icon: RedditIcon, label: "Reddit" },
+];
 
 export function Footer() {
   return (
@@ -69,7 +77,20 @@ export function Footer() {
           <p className="eyebrow text-ash">
             © {new Date().getFullYear()} Olfaire. All rights reserved.
           </p>
-          <p className="text-xs text-ash">Made with Lumi ✦</p>
+          <div className="flex items-center gap-4">
+            {socialLinks.map(({ href, icon, label }) => (
+              <Link
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="text-ash hover:text-ink transition-colors"
+              >
+                <HugeiconsIcon icon={icon} size={18} />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
