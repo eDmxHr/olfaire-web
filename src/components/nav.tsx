@@ -62,7 +62,9 @@ export function Nav() {
               href={href}
               className={cn(
                 "amber-hover text-sm tracking-wide transition-colors",
-                pathname === href ? "text-ink font-medium" : "text-ash hover:text-ink"
+                pathname === href
+                  ? "text-ink font-medium"
+                  : "text-ash hover:text-ink",
               )}
             >
               {label}
@@ -104,7 +106,7 @@ export function Nav() {
           {[
             { href: "/about", label: "About" },
             { href: "/pricing", label: "Pricing" },
-            { href: "/blog", label: "Journal" },
+            { href: "/blog", label: "Blog" },
             { href: "/support", label: "Support" },
           ].map(({ href, label }) => (
             <Link

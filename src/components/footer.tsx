@@ -29,7 +29,7 @@ export function Footer() {
               {[
                 { href: "/about", label: "About Olfaire" },
                 { href: "/pricing", label: "Pricing" },
-                { href: "/blog", label: "Journal" },
+                { href: "/blog", label: "Blog" },
               ].map(({ href, label }) => (
                 <Link
                   key={href}

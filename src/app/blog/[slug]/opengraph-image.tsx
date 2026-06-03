@@ -10,7 +10,7 @@ export default async function OGImage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  let title = "Olfaire Journal";
+  let title = "Olfaire Blog";
   let category = "Fragrance";
 
   try {
@@ -22,53 +22,51 @@ export default async function OGImage({
   }
 
   return new ImageResponse(
-    (
-      <div
+    <div
+      style={{
+        background: "#0D0D0A",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        padding: 80,
+      }}
+    >
+      <p
         style={{
-          background: "#0D0D0A",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: 80,
+          color: "#C9A84C",
+          fontSize: 20,
+          marginBottom: 24,
+          marginTop: 0,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
         }}
       >
-        <p
-          style={{
-            color: "#C9A84C",
-            fontSize: 20,
-            marginBottom: 24,
-            marginTop: 0,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-          }}
-        >
-          {category}
-        </p>
-        <h1
-          style={{
-            color: "#F5F1EA",
-            fontSize: 60,
-            lineHeight: 1.1,
-            margin: 0,
-            fontWeight: 300,
-          }}
-        >
-          {title}
-        </h1>
-        <p
-          style={{
-            color: "#8B8680",
-            fontSize: 22,
-            marginTop: 32,
-            marginBottom: 0,
-          }}
-        >
-          Olfaire Journal
-        </p>
-      </div>
-    ),
-    { ...size }
+        {category}
+      </p>
+      <h1
+        style={{
+          color: "#F5F1EA",
+          fontSize: 60,
+          lineHeight: 1.1,
+          margin: 0,
+          fontWeight: 300,
+        }}
+      >
+        {title}
+      </h1>
+      <p
+        style={{
+          color: "#8B8680",
+          fontSize: 22,
+          marginTop: 32,
+          marginBottom: 0,
+        }}
+      >
+        Olfaire Blog
+      </p>
+    </div>,
+    { ...size },
   );
 }

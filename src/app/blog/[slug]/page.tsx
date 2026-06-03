@@ -169,7 +169,7 @@ export default async function BlogPostPage({
         href="/blog"
         className="inline-flex items-center gap-2 text-ash text-sm hover:text-ink transition-colors mb-12 amber-hover"
       >
-        ← Journal
+        ← Blog
       </Link>
 
       {/* Header */}
@@ -225,7 +225,7 @@ export default async function BlogPostPage({
       {/* More posts */}
       <div className="mt-16">
         <Eyebrow variant="ash" className="mb-6">
-          More from the journal
+          More from the blog
         </Eyebrow>
         <Link
           href="/blog"

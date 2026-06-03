@@ -9,17 +9,17 @@ import { FadeUp, StaggerChildren, StaggerItem } from "@/components/ui/animate";
 import { getAllPosts } from "@/lib/mdx";
 
 export const metadata: Metadata = {
-  title: "Journal",
+  title: "Blog",
   description:
     "Fragrance chemistry, layering guides, and scent intelligence from the Olfaire team.",
   alternates: { canonical: "/blog" },
 };
 
 const categoryColors: Record<string, string> = {
-  Chemistry:  "bg-amber/10 text-amber border-amber/20",
-  Education:  "bg-ink/6 text-ash border-dust",
-  Science:    "bg-ink/6 text-ash border-dust",
-  Families:   "bg-ink/6 text-ash border-dust",
+  Chemistry: "bg-amber/10 text-amber border-amber/20",
+  Education: "bg-ink/6 text-ash border-dust",
+  Science: "bg-ink/6 text-ash border-dust",
+  Families: "bg-ink/6 text-ash border-dust",
   Collection: "bg-ink/6 text-ash border-dust",
 };
 
@@ -30,7 +30,7 @@ export default function BlogPage() {
     <PageWrapper maxWidth="full">
       {/* Header */}
       <FadeUp className="mb-16">
-        <Eyebrow className="mb-4">Journal</Eyebrow>
+        <Eyebrow className="mb-4">Blog</Eyebrow>
         <Heading as="h1" size="page" className="mb-6">
           Fragrance intelligence.
         </Heading>
@@ -53,7 +53,12 @@ export default function BlogPage() {
               />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
-                  <Badge className={categoryColors[posts[0].category] ?? "bg-ink/6 text-ash border-dust"}>
+                  <Badge
+                    className={
+                      categoryColors[posts[0].category] ??
+                      "bg-ink/6 text-ash border-dust"
+                    }
+                  >
                     {posts[0].category}
                   </Badge>
                   <span className="text-parchment/30 text-xs">
@@ -89,7 +94,12 @@ export default function BlogPage() {
               <div className="flex items-start gap-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-3">
-                    <Badge className={categoryColors[post.category] ?? "bg-ink/6 text-ash border-dust"}>
+                    <Badge
+                      className={
+                        categoryColors[post.category] ??
+                        "bg-ink/6 text-ash border-dust"
+                      }
+                    >
                       {post.category}
                     </Badge>
                     <span className="text-ash text-xs">{post.readTime}</span>
