@@ -66,6 +66,14 @@ const mdxComponents: MDXComponents = {
       </p>
     </blockquote>
   ),
+  LumiNote: ({ children }: MDXChild) => (
+    <div className="bg-linen rounded-xl p-6 my-10">
+      <p className="eyebrow text-amber mb-3">Lumi on this</p>
+      <div className="serif text-lg font-light italic text-ink leading-relaxed">
+        {children}
+      </div>
+    </div>
+  ),
   hr: () => <hr className="border-dust my-10" />,
 };
 
