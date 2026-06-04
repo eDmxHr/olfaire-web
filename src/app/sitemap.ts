@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://olfaire.app/blog",    lastModified: new Date(), changeFrequency: "weekly",  priority: 0.8 },
     { url: "https://olfaire.app/support", lastModified: new Date("2026-05-01"), changeFrequency: "monthly", priority: 0.6 },
     { url: "https://olfaire.app/privacy", lastModified: new Date("2026-05-01"), changeFrequency: "yearly",  priority: 0.4 },
+    { url: "https://olfaire.app/terms",   lastModified: new Date("2026-06-04"), changeFrequency: "yearly",  priority: 0.4 },
     ...postEntries,
   ];
 }
