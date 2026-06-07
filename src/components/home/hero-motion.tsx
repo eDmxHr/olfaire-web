@@ -20,13 +20,9 @@ export function HeroMotion({ children }: HeroMotionProps) {
       >
         <LumiMark size={64} />
       </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
-      >
+      <div>
         {children}
-      </motion.div>
+      </div>
     </>
   );
 }

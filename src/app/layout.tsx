@@ -11,7 +11,7 @@ import Script from "next/script";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400"],
   style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
@@ -19,7 +19,7 @@ const cormorant = Cormorant_Garamond({
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -112,9 +112,9 @@ export default function RootLayout({
         <SpeedInsights />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

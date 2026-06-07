@@ -44,7 +44,7 @@ export function PhoneParallax({
               alt={back.alt}
               width={260}
               height={563}
-              sizes="260px"
+              sizes="(max-resolution: 2dppx) 260px, 520px"
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
@@ -64,8 +64,9 @@ export function PhoneParallax({
               alt={front.alt}
               width={260}
               height={563}
-              sizes="260px"
+              sizes="(max-resolution: 2dppx) 260px, 520px"
               loading="eager"
+              preload
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
@@ -82,8 +83,9 @@ export function PhoneParallax({
               alt={front.alt}
               width={260}
               height={563}
-              sizes="260px"
+              sizes="(max-resolution: 2dppx) 260px, 520px"
               loading="eager"
+              preload
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
