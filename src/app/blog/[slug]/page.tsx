@@ -61,9 +61,9 @@ const mdxComponents: MDXComponents = {
   ),
   blockquote: ({ children }: MDXChild) => (
     <blockquote className="bg-linen rounded-xl p-6 my-8 border-l-2 border-amber">
-      <p className="serif text-lg font-light italic text-ink leading-relaxed m-0">
+      <div className="serif text-lg font-light italic text-ink leading-relaxed m-0">
         {children}
-      </p>
+      </div>
     </blockquote>
   ),
   LumiNote: ({ children }: MDXChild) => (
