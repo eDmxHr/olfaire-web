@@ -66,7 +66,7 @@ export function PhoneParallax({
               height={563}
               sizes="(max-resolution: 2dppx) 260px, 520px"
               loading="eager"
-              preload
+              priority
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
@@ -85,7 +85,7 @@ export function PhoneParallax({
               height={563}
               sizes="(max-resolution: 2dppx) 260px, 520px"
               loading="eager"
-              preload
+              priority
               placeholder="blur"
               className="w-full h-full object-cover object-top"
             />
