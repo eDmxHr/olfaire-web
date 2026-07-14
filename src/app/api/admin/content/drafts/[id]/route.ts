@@ -35,8 +35,9 @@ export async function PATCH(
     const draft = await updateDraft(id, patch);
     return NextResponse.json({ draft });
   } catch (error) {
+    console.error("Content Studio draft update error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Draft update failed." },
+      { error: "Draft update failed." },
       { status: 500 },
     );
   }

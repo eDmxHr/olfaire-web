@@ -1,7 +1,10 @@
+import "server-only";
+
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 import matter from "gray-matter";
+import { createClient } from "@supabase/supabase-js";
 import type {
   ContentDraft,
   ContentStudioInput,
@@ -11,15 +14,29 @@ import type {
 } from "./types";
 import { frontmatterToMdx, slugify } from "./utils";
 
-const DRAFT_ROOT = path.join(process.cwd(), ".content-studio", "drafts");
 const BLOG_ROOT = path.join(process.cwd(), "src/content/blog");
+const DRAFT_TABLE = "content_studio_drafts";
 
-async function ensureDraftRoot() {
-  await fs.mkdir(DRAFT_ROOT, { recursive: true });
+interface DraftRow {
+  id: string;
+  status: DraftStatus;
+  slug: string;
+  input: ContentStudioInput;
+  frontmatter: DraftFrontmatter;
+  mdx: string;
+  seo_title: string;
+  meta_description: string;
+  generator_brief: string;
+  research: ResearchResult | null;
+  published_path: string | null;
+  created_at: string;
+  updated_at: string;
+  published_at: string | null;
 }
 
-function draftPath(id: string) {
-  return path.join(DRAFT_ROOT, `${id}.json`);
+function isStorageUnavailable(error: unknown) {
+  const code = (error as NodeJS.ErrnoException).code;
+  return code === "EROFS" || code === "EACCES" || code === "EPERM";
 }
 
 function assertSafeSlug(slug: string) {
@@ -28,36 +45,120 @@ function assertSafeSlug(slug: string) {
   }
 }
 
-export async function listDrafts() {
-  await ensureDraftRoot();
-  const files = await fs.readdir(DRAFT_ROOT);
-  const drafts = await Promise.all(
-    files
-      .filter((file) => file.endsWith(".json"))
-      .map(async (file) => {
-        const raw = await fs.readFile(path.join(DRAFT_ROOT, file), "utf-8");
-        return JSON.parse(raw) as ContentDraft;
-      }),
-  );
+function getDraftClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  return drafts.sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-  );
+  if (!url || !key) {
+    throw new Error("Supabase draft storage is not configured.");
+  }
+
+  return createClient(url, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+function rowToDraft(row: DraftRow): ContentDraft {
+  return {
+    id: row.id,
+    status: row.status,
+    slug: row.slug,
+    input: row.input,
+    frontmatter: row.frontmatter,
+    mdx: row.mdx ?? "",
+    seoTitle: row.seo_title,
+    metaDescription: row.meta_description,
+    generatorBrief: row.generator_brief,
+    research: row.research ?? undefined,
+    publishedPath: row.published_path ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    publishedAt: row.published_at ?? undefined,
+  };
+}
+
+function draftToRow(draft: ContentDraft): DraftRow {
+  return {
+    id: draft.id,
+    status: draft.status,
+    slug: draft.slug,
+    input: draft.input,
+    frontmatter: draft.frontmatter,
+    mdx: draft.mdx,
+    seo_title: draft.seoTitle,
+    meta_description: draft.metaDescription,
+    generator_brief: draft.generatorBrief,
+    research: draft.research ?? null,
+    published_path: draft.publishedPath ?? null,
+    created_at: draft.createdAt,
+    updated_at: draft.updatedAt,
+    published_at: draft.publishedAt ?? null,
+  };
+}
+
+function supabaseError(error: { message: string } | null, fallback: string) {
+  if (!error) return null;
+  return new Error(error.message || fallback);
+}
+
+export async function listDrafts() {
+  let supabase: ReturnType<typeof getDraftClient>;
+  try {
+    supabase = getDraftClient();
+  } catch {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from(DRAFT_TABLE)
+    .select("*")
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    return [];
+  }
+
+  return ((data ?? []) as DraftRow[]).map(rowToDraft);
 }
 
 export async function getDraft(id: string) {
-  const raw = await fs.readFile(draftPath(id), "utf-8");
-  return JSON.parse(raw) as ContentDraft;
+  const supabase = getDraftClient();
+  const { data, error } = await supabase
+    .from(DRAFT_TABLE)
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  const failure = supabaseError(error, "Unable to load draft.");
+  if (failure) throw failure;
+  if (!data) throw new Error("Draft not found.");
+
+  return rowToDraft(data as DraftRow);
 }
 
 export async function saveDraft(draft: ContentDraft) {
-  await ensureDraftRoot();
-  await fs.writeFile(draftPath(draft.id), `${JSON.stringify(draft, null, 2)}\n`);
-  return draft;
+  const supabase = getDraftClient();
+  const { data, error } = await supabase
+    .from(DRAFT_TABLE)
+    .upsert(draftToRow(draft), { onConflict: "id" })
+    .select("*")
+    .single();
+
+  const failure = supabaseError(error, "Unable to save draft.");
+  if (failure) throw failure;
+
+  return rowToDraft(data as DraftRow);
 }
 
 export async function deleteDraft(id: string) {
-  await fs.unlink(draftPath(id));
+  const supabase = getDraftClient();
+  const { error } = await supabase.from(DRAFT_TABLE).delete().eq("id", id);
+
+  const failure = supabaseError(error, "Unable to delete draft.");
+  if (failure) throw failure;
 }
 
 function makeGeneratorBrief(input: ContentStudioInput, research?: ResearchResult) {
@@ -177,7 +278,16 @@ export async function publishDraft(id: string) {
     parsed.content,
   );
 
-  await fs.writeFile(filePath, content, { flag: "wx" });
+  try {
+    await fs.writeFile(filePath, content, { flag: "wx" });
+  } catch (error) {
+    if (isStorageUnavailable(error)) {
+      throw new Error(
+        "Publishing requires a writable local project filesystem.",
+      );
+    }
+    throw error;
+  }
 
   const now = new Date().toISOString();
   return saveDraft({

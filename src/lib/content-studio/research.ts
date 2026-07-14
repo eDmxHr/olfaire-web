@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getAllPosts } from "@/lib/mdx";
 import {
   cleanContentStudioText,

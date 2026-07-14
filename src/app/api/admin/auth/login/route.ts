@@ -8,9 +8,7 @@ import {
 
 function getSupabaseLoginClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
     throw new Error("Unable to complete authentication.");
@@ -46,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     if (error || !data.session?.access_token) {
       return NextResponse.json(
-        { error: error?.message ?? "Unable to sign in." },
+        { error: "Invalid email or password." },
         { status: 401 },
       );
     }
@@ -54,7 +52,7 @@ export async function POST(req: NextRequest) {
     const user = await getAdminUserFromToken(data.session.access_token);
     if (!user) {
       return NextResponse.json(
-        { error: "This account is not authorized for Content Studio." },
+        { error: "Unable to sign in." },
         { status: 403 },
       );
     }

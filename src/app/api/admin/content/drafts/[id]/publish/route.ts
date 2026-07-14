@@ -14,8 +14,9 @@ export async function POST(
     const draft = await publishDraft(id);
     return NextResponse.json({ draft });
   } catch (error) {
+    console.error("Content Studio publish error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Publish failed." },
+      { error: "Publish failed." },
       { status: 400 },
     );
   }

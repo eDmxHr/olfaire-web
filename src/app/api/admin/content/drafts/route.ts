@@ -36,8 +36,9 @@ export async function POST(req: NextRequest) {
     const draft = await createDraft(input, body.research);
     return NextResponse.json({ draft }, { status: 201 });
   } catch (error) {
+    console.error("Content Studio draft creation error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Draft creation failed." },
+      { error: "Draft creation failed." },
       { status: 500 },
     );
   }

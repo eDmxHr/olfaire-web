@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
+import { compile } from "@mdx-js/mdx";
 import { requireAdminApi } from "@/lib/admin-auth";
 import type { DraftFrontmatter } from "@/lib/content-studio/types";
 
@@ -14,15 +13,15 @@ export async function POST(req: NextRequest) {
       mdx: string;
     };
 
-    await evaluate(body.mdx, {
-      ...runtime,
-      baseUrl: import.meta.url,
+    await compile(body.mdx, {
+      outputFormat: "function-body",
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Content Studio MDX preview error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "MDX preview failed." },
+      { error: "MDX preview failed." },
       { status: 400 },
     );
   }

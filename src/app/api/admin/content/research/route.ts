@@ -22,13 +22,9 @@ export async function POST(req: NextRequest) {
     const research = await getResearchService().search(input);
     return NextResponse.json({ research });
   } catch (error) {
-    const message =
-      error instanceof Error && !error.message.includes("TAVILY_API_KEY")
-        ? error.message
-        : "Research is unavailable right now.";
-
+    console.error("Content Studio research error:", error);
     return NextResponse.json(
-      { error: message },
+      { error: "Research is unavailable right now." },
       { status: 500 },
     );
   }

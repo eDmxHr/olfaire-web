@@ -1,3 +1,5 @@
+import "server-only";
+
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
@@ -12,9 +14,7 @@ export interface AdminUser {
 
 function getSupabaseForAuth() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
     throw new Error("Unable to verify admin access.");
@@ -45,8 +45,16 @@ export async function getAdminUserFromToken(
 ): Promise<AdminUser | null> {
   if (!accessToken) return null;
 
-  const supabase = getSupabaseForAuth();
-  const { data, error } = await supabase.auth.getUser(accessToken);
+  let data;
+  let error;
+  try {
+    const supabase = getSupabaseForAuth();
+    const result = await supabase.auth.getUser(accessToken);
+    data = result.data;
+    error = result.error;
+  } catch {
+    return null;
+  }
 
   if (error || !data.user?.email) {
     return null;

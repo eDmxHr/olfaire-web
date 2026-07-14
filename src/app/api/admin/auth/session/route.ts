@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
   if (!user || !accessToken) {
     return NextResponse.json(
-      { error: "This account is not authorized for Content Studio." },
+      { error: "Admin authentication required." },
       { status: 403 },
     );
   }
