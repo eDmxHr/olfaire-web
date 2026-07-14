@@ -8,10 +8,10 @@ import {
 
 function getSupabaseLoginClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
-    throw new Error("Unable to complete authentication.");
+    throw new Error("Supabase authentication is not configured.");
   }
 
   return createClient(url, key, {
