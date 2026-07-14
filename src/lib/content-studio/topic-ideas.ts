@@ -4,35 +4,31 @@ import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
 import { getAllPosts } from "@/lib/mdx";
+import { getFragranceTrendSignals } from "./google-trends";
 import { getSearchConsoleOpportunities } from "./search-console";
-import { normalizeResearchKeyword } from "./utils";
+import { synthesizeTopicIdeas } from "./topic-synthesis";
 
 type TopicIdeaSource = "search_console" | "tavily" | "reddit" | "fallback";
 
-interface DiscoveryConfig {
-  source: Extract<TopicIdeaSource, "tavily" | "reddit">;
-  queries: string[];
-  baseScore: number;
-  queryPenalty: number;
-  angle: (keyword: string) => string;
-  errorMessage: string;
-}
+export type SearchIntent =
+  | "informational"
+  | "commercial"
+  | "comparison"
+  | "transactional";
+
+export type TrafficLevel = "low" | "medium" | "high";
 
 export interface TopicIdea {
   keyword: string;
   angle: string;
   source: TopicIdeaSource;
   score: number;
-}
-
-interface TavilyTopicResult {
-  title?: string;
-  url?: string;
-  content?: string;
-}
-
-interface TavilyTopicResponse {
-  results?: TavilyTopicResult[];
+  searchIntent?: SearchIntent;
+  trendRationale?: string;
+  appAngle?: string;
+  trafficPotential?: TrafficLevel;
+  difficulty?: TrafficLevel;
+  estimated?: boolean;
 }
 
 interface TavilyTopicCache {
@@ -43,7 +39,7 @@ interface TavilyTopicCache {
 
 const CACHE_ROOT = path.join(process.cwd(), ".content-studio", "cache");
 const TAVILY_TOPIC_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
-const TAVILY_TOPIC_CACHE_VERSION = "v3";
+const TAVILY_TOPIC_CACHE_VERSION = "v4";
 
 const fallbackIdeas: TopicIdea[] = [
   {
@@ -103,6 +99,12 @@ const topicDiscoveryQueries = [
   "perfume notes longevity sillage seasonal fragrance guide",
 ];
 
+const newsDiscoveryQueries = [
+  "new fragrance releases 2026 perfume launches",
+  "trending perfumes viral tiktok fragrance",
+  "fragrance industry news niche perfume trends",
+];
+
 const redditDiscoveryQueries = [
   "site:reddit.com/r/fragrance perfume layering question",
   "site:reddit.com/r/fragrance why does perfume not last",
@@ -110,28 +112,6 @@ const redditDiscoveryQueries = [
   "site:reddit.com/r/fragrance oud perfume beginner question",
   "site:reddit.com/r/Colognes signature scent question",
 ];
-
-const discoveryConfigs: DiscoveryConfig[] = [
-  {
-    source: "tavily",
-    queries: topicDiscoveryQueries,
-    baseScore: 95,
-    queryPenalty: 5,
-    angle: makeTavilyAngle,
-    errorMessage: "Topic discovery failed.",
-  },
-  {
-    source: "reddit",
-    queries: redditDiscoveryQueries,
-    baseScore: 92,
-    queryPenalty: 4,
-    angle: makeRedditAngle,
-    errorMessage: "Reddit topic discovery failed.",
-  },
-];
-
-const fragranceTopicPattern =
-  /\b(perfume|fragrance|scent|cologne|parfum|oud|attar|musk|amber|rose|vanilla|notes?|accord|layering|sillage|projection|longevity|skin chemistry|storage|seasonal|signature scent|collector|bottle)\b/i;
 
 function hasExistingCoverage(keyword: string) {
   const terms = keyword
@@ -145,103 +125,8 @@ function hasExistingCoverage(keyword: string) {
   });
 }
 
-function cleanTopicText(value: string) {
-  return value
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\[(.*?)\]\([^)]+\)/g, "$1")
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/\*\*/g, "")
-    .replace(/^\s{0,3}#{1,6}\s*/gm, "")
-    .replace(/^\s{0,3}[-*+]\s+/gm, "")
-    .replace(/^\s{0,3}\d+[.)]\s+/gm, "")
-    .replace(/\s*:\s*r\/[a-z0-9_]+.*$/i, "")
-    .replace(/\s+-\s+Reddit.*$/i, "")
-    .replace(/\s+-\s+(reddit|fragrantica|byrdie|vogue|gq|esquire|allure).*$/i, "")
-    .replace(/\s+\|\s+.*$/g, "")
-    .replace(/\s+/g, " ")
-    .replace(/^["'“”‘’\s:,-]+/, "")
-    .replace(/["'“”‘’\s:,-]+$/, "")
-    .trim();
-}
-
-function isUsefulTopic(value: string) {
-  const lower = value.toLowerCase();
-
-  return (
-    value.length >= 12 &&
-    value.length <= 95 &&
-    value.includes(" ") &&
-    fragranceTopicPattern.test(value) &&
-    !/[\\/]/.test(value) &&
-    !/\b(http|www|\.com|\.net|\.org|utm_|ref=)\b/i.test(value) &&
-    !/(privacy policy|terms of service|login|sign up|coupon|discount)/i.test(
-      lower,
-    )
-  );
-}
-
 function normalizeKey(value: string) {
   return value.toLowerCase().replace(/[^\w\s?]/g, "").replace(/\s+/g, " ").trim();
-}
-
-function extractTopicCandidates(result: TavilyTopicResult) {
-  const title = cleanTopicText(result.title ?? "");
-  const content = cleanTopicText(result.content ?? "");
-  const sentences = content
-    .split(/(?<=[.!?])\s+/)
-    .map(cleanTopicText)
-    .filter((item) => item.length <= 110);
-
-  return [title, ...sentences]
-    .map((candidate) => {
-      if (candidate.endsWith(".")) {
-        return candidate.slice(0, -1);
-      }
-      return candidate;
-    })
-    .filter(isUsefulTopic)
-    .map(normalizeResearchKeyword)
-    .filter(isUsefulTopic);
-}
-
-function makeTavilyAngle(keyword: string) {
-  if (/\b(layer|layering)\b/i.test(keyword)) {
-    return "Turn layering advice into practical decisions about contrast, texture, and skin behavior.";
-  }
-
-  if (/\b(skin|chemistry|longevity|projection|sillage)\b/i.test(keyword)) {
-    return "Explain the gap between search advice and what actually happens when fragrance is worn.";
-  }
-
-  if (/\b(oud|musk|amber|rose|vanilla|notes?|accord)\b/i.test(keyword)) {
-    return "Make the material or note feel sensory, useful, and less trapped in generic vocabulary.";
-  }
-
-  if (/\b(store|storage|bottle|collection|collector)\b/i.test(keyword)) {
-    return "Frame the topic around how a real fragrance collection is used, protected, and understood.";
-  }
-
-  return "Use the live search pattern as a starting point, then add Olfaire's more sensory, collector-aware point of view.";
-}
-
-function makeRedditAngle(keyword: string) {
-  if (/\b(last|longevity|projection|sillage|disappear)\b/i.test(keyword)) {
-    return "Answer the wearing problem behind the question: why scent performance changes across skin, weather, and expectation.";
-  }
-
-  if (/\b(layer|layering)\b/i.test(keyword)) {
-    return "Turn a recurring community question into a clear guide for layering without flattening the fragrances.";
-  }
-
-  if (/\b(oud|musk|amber|rose|vanilla|notes?|accord)\b/i.test(keyword)) {
-    return "Use the community question as a way to make the note more sensory and less intimidating.";
-  }
-
-  if (/\b(signature|choose|beginner|blind buy)\b/i.test(keyword)) {
-    return "Translate a common buying anxiety into a practical, taste-led decision framework.";
-  }
-
-  return "Use the Reddit signal as a human question to answer with more taste, context, and restraint than a generic guide.";
 }
 
 function addIdea(ideas: Map<string, TopicIdea>, idea: TopicIdea) {
@@ -254,7 +139,11 @@ function addIdea(ideas: Map<string, TopicIdea>, idea: TopicIdea) {
 }
 
 function cacheQueries() {
-  return discoveryConfigs.flatMap((config) => config.queries);
+  return [
+    ...topicDiscoveryQueries,
+    ...newsDiscoveryQueries,
+    ...redditDiscoveryQueries,
+  ];
 }
 
 function tavilyTopicCachePath() {
@@ -303,9 +192,23 @@ async function writeTavilyTopicCache(ideas: TopicIdea[]) {
   );
 }
 
-async function fetchDiscoveredTopicIdeas(config: DiscoveryConfig, apiKey: string) {
+interface RawTavilyResult {
+  title?: string;
+  url?: string;
+  content?: string;
+}
+
+interface RawTavilyResponse {
+  results?: RawTavilyResult[];
+}
+
+async function fetchRawTavily(
+  queries: string[],
+  apiKey: string,
+  options: { topic?: "general" | "news"; days?: number } = {},
+): Promise<RawTavilyResult[]> {
   const responses = await Promise.allSettled(
-    config.queries.map(async (query) => {
+    queries.map(async (query) => {
       const response = await fetch("https://api.tavily.com/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -315,44 +218,52 @@ async function fetchDiscoveredTopicIdeas(config: DiscoveryConfig, apiKey: string
           search_depth: "advanced",
           include_answer: false,
           max_results: 6,
+          topic: options.topic ?? "general",
+          ...(options.days ? { days: options.days } : {}),
         }),
+        signal: AbortSignal.timeout(15000),
       });
 
       if (!response.ok) {
-        throw new Error(config.errorMessage);
+        throw new Error("Topic discovery failed.");
       }
 
-      return (await response.json()) as TavilyTopicResponse;
+      return (await response.json()) as RawTavilyResponse;
     }),
   );
 
-  const ideas = new Map<string, TopicIdea>();
-
-  responses.forEach((response, queryIndex) => {
-    if (response.status !== "fulfilled") return;
-
-    response.value.results?.forEach((result, resultIndex) => {
-      extractTopicCandidates(result).forEach((keyword, candidateIndex) => {
-        if (hasExistingCoverage(keyword)) return;
-
-        addIdea(ideas, {
-          keyword,
-          angle: config.angle(keyword),
-          source: config.source,
-          score:
-            config.baseScore -
-            queryIndex * config.queryPenalty -
-            resultIndex * 3 -
-            candidateIndex,
-        });
-      });
-    });
-  });
-
-  return Array.from(ideas.values());
+  return responses.flatMap((response) =>
+    response.status === "fulfilled" ? response.value.results ?? [] : [],
+  );
 }
 
-async function getTavilyTopicIdeas() {
+async function getSynthesizedTopicIdeas(
+  apiKey: string,
+  searchConsoleQueries: string[],
+) {
+  const [tavilyGeneral, tavilyNews, reddit, trends] = await Promise.all([
+    fetchRawTavily(topicDiscoveryQueries, apiKey),
+    fetchRawTavily(newsDiscoveryQueries, apiKey, { topic: "news", days: 14 }),
+    fetchRawTavily(redditDiscoveryQueries, apiKey),
+    getFragranceTrendSignals().catch(() => ({
+      risingQueries: [],
+      interest: {},
+    })),
+  ]);
+
+  const existingTitles = getAllPosts().map((post) => post.title);
+
+  return synthesizeTopicIdeas({
+    tavilyGeneral,
+    tavilyNews,
+    reddit,
+    trends,
+    searchConsoleQueries,
+    existingTitles,
+  });
+}
+
+async function getTavilyTopicIdeas(searchConsoleQueries: string[]) {
   const cachedIdeas = await readTavilyTopicCache();
 
   if (cachedIdeas) {
@@ -365,23 +276,24 @@ async function getTavilyTopicIdeas() {
     return [];
   }
 
-  const ideas = (
-    await Promise.all(
-      discoveryConfigs.map((config) =>
-        fetchDiscoveredTopicIdeas(config, apiKey),
-      ),
-    )
-  ).flat();
-
+  // Synthesis is the only path. On any failure (missing ANTHROPIC_API_KEY,
+  // API error, malformed output) return nothing so getTopicIdeas falls back to
+  // the curated fallbackIdeas — we don't cache an empty result.
+  const ideas = await getSynthesizedTopicIdeas(apiKey, searchConsoleQueries);
   await writeTavilyTopicCache(ideas);
   return ideas;
 }
 
 export async function getTopicIdeas() {
   const ideas = new Map<string, TopicIdea>();
+  const searchConsoleQueries: string[] = [];
 
   try {
     const searchConsole = await getSearchConsoleOpportunities();
+    searchConsoleQueries.push(
+      ...searchConsole.opportunities.map((item) => item.query),
+      ...searchConsole.topQueries.map((item) => item.query),
+    );
     const searchIdeas = [
       ...searchConsole.opportunities.map((item) => ({
         keyword: item.query,
@@ -407,7 +319,7 @@ export async function getTopicIdeas() {
   }
 
   try {
-    for (const idea of await getTavilyTopicIdeas()) {
+    for (const idea of await getTavilyTopicIdeas(searchConsoleQueries)) {
       addIdea(ideas, idea);
     }
   } catch {

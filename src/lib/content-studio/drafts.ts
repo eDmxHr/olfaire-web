@@ -216,22 +216,53 @@ export async function createDraft(input: ContentStudioInput, research?: Research
   return saveDraft(draft);
 }
 
-export async function updateDraft(
-  id: string,
-  patch: Partial<
-    Pick<
-      ContentDraft,
-      | "slug"
-      | "status"
-      | "frontmatter"
-      | "mdx"
-      | "seoTitle"
-      | "metaDescription"
-      | "generatorBrief"
-      | "research"
-    >
-  >,
-) {
+type DraftPatch = Partial<
+  Pick<
+    ContentDraft,
+    | "slug"
+    | "status"
+    | "frontmatter"
+    | "mdx"
+    | "seoTitle"
+    | "metaDescription"
+    | "generatorBrief"
+    | "research"
+  >
+>;
+
+const DRAFT_STATUSES: DraftStatus[] = ["draft", "in_review", "published"];
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function sanitizeDraftPatch(raw: unknown): DraftPatch {
+  if (!isPlainObject(raw)) return {};
+
+  const patch: DraftPatch = {};
+
+  for (const field of ["slug", "mdx", "seoTitle", "metaDescription", "generatorBrief"] as const) {
+    if (typeof raw[field] === "string") {
+      patch[field] = raw[field] as string;
+    }
+  }
+
+  if (typeof raw.status === "string" && DRAFT_STATUSES.includes(raw.status as DraftStatus)) {
+    patch.status = raw.status as DraftStatus;
+  }
+
+  if (isPlainObject(raw.frontmatter)) {
+    patch.frontmatter = raw.frontmatter as unknown as ContentDraft["frontmatter"];
+  }
+
+  if (isPlainObject(raw.research)) {
+    patch.research = raw.research as unknown as ContentDraft["research"];
+  }
+
+  return patch;
+}
+
+export async function updateDraft(id: string, patch: DraftPatch) {
   const current = await getDraft(id);
   const next: ContentDraft = {
     ...current,

@@ -2,7 +2,7 @@
 
 export function AdminLogoutButton() {
   async function logout() {
-    await fetch("/api/admin/auth/session", { method: "DELETE" });
+    await fetch("/api/admin/auth/logout", { method: "POST" });
     window.location.href = "/login";
   }
 

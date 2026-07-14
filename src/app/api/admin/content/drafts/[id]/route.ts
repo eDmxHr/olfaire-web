@@ -3,6 +3,7 @@ import { requireAdminApi } from "@/lib/admin-auth";
 import {
   deleteDraft,
   getDraft,
+  sanitizeDraftPatch,
   updateDraft,
 } from "@/lib/content-studio/drafts";
 
@@ -31,7 +32,7 @@ export async function PATCH(
 
   try {
     const { id } = await params;
-    const patch = await req.json();
+    const patch = sanitizeDraftPatch(await req.json());
     const draft = await updateDraft(id, patch);
     return NextResponse.json({ draft });
   } catch (error) {

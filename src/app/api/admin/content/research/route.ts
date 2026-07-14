@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-auth";
+import { checkRateLimit } from "@/lib/content-studio/rate-limit";
 import { getResearchService } from "@/lib/content-studio/research";
 import { normalizeContentStudioInput } from "@/lib/content-studio/utils";
 import type { ContentStudioInput } from "@/lib/content-studio/types";
 
 export async function POST(req: NextRequest) {
-  const { response } = await requireAdminApi();
+  const { user, response } = await requireAdminApi();
   if (response) return response;
+
+  const limit = checkRateLimit(`research:${user.id}`, 10);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many research requests. Please slow down." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+    );
+  }
 
   try {
     const input = normalizeContentStudioInput(

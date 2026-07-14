@@ -20,11 +20,24 @@ function sourceLabel(source: TopicIdea["source"]) {
     case "search_console":
       return "Search Console";
     case "tavily":
-      return "Tavily";
+      return "Trend synthesis";
     case "reddit":
       return "Reddit";
     default:
       return "Fallback";
+  }
+}
+
+function levelClass(level?: "low" | "medium" | "high") {
+  switch (level) {
+    case "high":
+      return "text-emerald-700";
+    case "medium":
+      return "text-amber";
+    case "low":
+      return "text-ash";
+    default:
+      return "text-ash";
   }
 }
 
@@ -43,9 +56,10 @@ export function TopicIdeas({
     <section className="border-y border-dust py-6">
       <p className="eyebrow text-amber mb-3">Topic ideas</p>
       <p className="mb-5 text-sm leading-relaxed text-ash">
-        Starting points from Search Console, Tavily SERP discovery, and Reddit
-        question signals. Fallback ideas appear only when live sources are
-        unavailable.
+        Trending, SEO-oriented article ideas synthesized from Google Trends,
+        recent fragrance news, Reddit discussion, and Search Console demand.
+        Prioritize high-traffic, low-difficulty topics. Fallback ideas appear
+        only when live sources are unavailable.
       </p>
 
       {isLoading && (
@@ -78,14 +92,41 @@ export function TopicIdeas({
                 <Badge className="border-dust bg-white/60 text-ash">
                   {sourceLabel(idea.source)}
                 </Badge>
-                <span className="text-xs text-ash">
-                  score {Math.round(idea.score)}
-                </span>
+                {idea.searchIntent && (
+                  <Badge className="border-dust bg-white/60 capitalize text-ash">
+                    {idea.searchIntent}
+                  </Badge>
+                )}
+                {idea.trafficPotential && (
+                  <span className={`text-xs ${levelClass(idea.trafficPotential)}`}>
+                    traffic: {idea.trafficPotential}
+                  </span>
+                )}
+                {idea.difficulty && (
+                  <span className={`text-xs ${levelClass(idea.difficulty)}`}>
+                    difficulty: {idea.difficulty}
+                  </span>
+                )}
+                {idea.estimated && (
+                  <span className="text-xs text-ash/70">(est.)</span>
+                )}
               </div>
               <p className="font-medium text-ink">{idea.keyword}</p>
               <p className="mt-1 text-sm leading-relaxed text-ash">
                 {idea.angle}
               </p>
+              {idea.trendRationale && (
+                <p className="mt-2 text-xs leading-relaxed text-ash">
+                  <span className="font-medium text-ink">Why now:</span>{" "}
+                  {idea.trendRationale}
+                </p>
+              )}
+              {idea.appAngle && (
+                <p className="mt-1 text-xs leading-relaxed text-ash">
+                  <span className="font-medium text-ink">App hook:</span>{" "}
+                  {idea.appAngle}
+                </p>
+              )}
               <Button
                 type="button"
                 size="sm"

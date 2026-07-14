@@ -130,6 +130,42 @@ export function EditorWorkspace({
     },
   });
 
+  const generateMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        `/api/admin/content/drafts/${draft.id}/generate`,
+        { method: "POST" },
+      );
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error ?? "Unable to generate article.");
+      return data.draft as ContentDraft;
+    },
+    onSuccess: (updated) => {
+      setDraft(updated);
+      setPreviewSource(updated.mdx);
+      setMessage("Article generated.");
+      setError("");
+    },
+    onError: (generateError) => {
+      setError(
+        generateError instanceof Error
+          ? generateError.message
+          : "Generation failed.",
+      );
+    },
+  });
+
+  function generateArticle() {
+    if (
+      draft.mdx.trim() &&
+      !window.confirm("Replace the current article body with a new AI draft?")
+    ) {
+      return;
+    }
+    generateMutation.mutate();
+  }
+
   const sourceWithFrontmatter = useMemo(
     () =>
       `---\ntitle: ${JSON.stringify(draft.frontmatter.title)}\ndate: ${JSON.stringify(draft.frontmatter.date)}\ncategory: ${JSON.stringify(draft.frontmatter.category)}\nexcerpt: ${JSON.stringify(draft.frontmatter.excerpt)}\nreadTime: ${JSON.stringify(draft.frontmatter.readTime)}\n---\n\n${draft.mdx}`,
@@ -354,7 +390,25 @@ export function EditorWorkspace({
 
         <main className="space-y-10">
           <section className="border-y border-dust py-6">
-            <p className="eyebrow text-amber mb-5">MDX editor</p>
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <p className="eyebrow text-amber">MDX editor</p>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={generateArticle}
+                disabled={generateMutation.isPending || !draft.research}
+                title={
+                  draft.research
+                    ? undefined
+                    : "Add research to this draft first."
+                }
+              >
+                {generateMutation.isPending
+                  ? "Writing article..."
+                  : "Write article with AI"}
+              </Button>
+            </div>
             <Textarea
               className="min-h-[620px] rounded-lg font-mono text-xs leading-relaxed"
               value={draft.mdx}

@@ -96,6 +96,7 @@ async function getAccessToken() {
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion,
     }),
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!response.ok) {
@@ -108,6 +109,40 @@ async function getAccessToken() {
   }
 
   return data.access_token;
+}
+
+const BRAND_TERMS = ["olfaire"];
+
+function editDistance(a: string, b: string) {
+  const rows = Array.from({ length: a.length + 1 }, (_, i) => [
+    i,
+    ...Array(b.length).fill(0),
+  ]);
+  for (let j = 1; j <= b.length; j += 1) rows[0][j] = j;
+  for (let i = 1; i <= a.length; i += 1) {
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      rows[i][j] = Math.min(
+        rows[i - 1][j] + 1,
+        rows[i][j - 1] + 1,
+        rows[i - 1][j - 1] + cost,
+      );
+    }
+  }
+  return rows[a.length][b.length];
+}
+
+function isBrandQuery(query: string) {
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return tokens.some((token) =>
+    BRAND_TERMS.some(
+      (brand) => token === brand || editDistance(token, brand) <= 2,
+    ),
+  );
+}
+
+function isTopicalBlogPage(page?: string) {
+  return Boolean(page && /\/blog\//.test(page));
 }
 
 function hasExistingArticle(query: string) {
@@ -123,61 +158,53 @@ function hasExistingArticle(query: string) {
 }
 
 function buildOpportunities(rows: SearchConsoleRow[]) {
-  const opportunities: SearchConsoleOpportunity[] = [];
+  // One opportunity per query, choosing the single best type by priority:
+  // page_two > content_gap > low_ctr.
+  const byQuery = new Map<string, SearchConsoleOpportunity>();
 
   for (const row of rows) {
     const [query, page] = row.keys ?? [];
-    if (!query) continue;
+    if (!query || isBrandQuery(query)) continue;
 
     const clicks = row.clicks ?? 0;
     const impressions = row.impressions ?? 0;
     const ctr = row.ctr ?? 0;
     const position = row.position ?? 0;
 
-    if (impressions >= 10 && ctr < 0.03) {
-      opportunities.push({
-        type: "low_ctr",
-        query,
-        page,
-        clicks,
-        impressions,
-        ctr,
-        position,
-        reason: "Google is showing Olfaire, but searchers are not clicking often.",
-        action: "Review the title, excerpt, and article angle for this query.",
-      });
-    }
+    if (impressions < 10) continue;
 
-    if (impressions >= 5 && position >= 6 && position <= 30) {
-      opportunities.push({
+    const base = { query, page, clicks, impressions, ctr, position };
+    let opportunity: SearchConsoleOpportunity | null = null;
+
+    if (position >= 8 && position <= 20) {
+      opportunity = {
+        ...base,
         type: "page_two",
-        query,
-        page,
-        clicks,
-        impressions,
-        ctr,
-        position,
         reason: "This query is close enough to improve with a stronger article or refresh.",
         action: "Research the query and create or improve a focused article.",
-      });
+      };
+    } else if (!hasExistingArticle(query) && !isTopicalBlogPage(page)) {
+      opportunity = {
+        ...base,
+        type: "content_gap",
+        reason: "Olfaire has visibility for this query, but no matching article yet.",
+        action: "Create a Content Studio brief around this keyword.",
+      };
+    } else if (ctr < 0.03) {
+      opportunity = {
+        ...base,
+        type: "low_ctr",
+        reason: "Google is showing Olfaire, but searchers are not clicking often.",
+        action: "Review the title, excerpt, and article angle for this query.",
+      };
     }
 
-    if (impressions >= 5 && !hasExistingArticle(query)) {
-      opportunities.push({
-        type: "content_gap",
-        query,
-        page,
-        clicks,
-        impressions,
-        ctr,
-        position,
-        reason: "Olfaire has visibility for this query, but no obvious matching article.",
-        action: "Create a Content Studio brief around this keyword.",
-      });
+    if (opportunity) {
+      byQuery.set(query, opportunity);
     }
   }
 
-  return opportunities
+  return Array.from(byQuery.values())
     .sort((a, b) => b.impressions - a.impressions || a.position - b.position)
     .slice(0, 8);
 }
@@ -186,7 +213,7 @@ function buildTopQueries(rows: SearchConsoleRow[]): SearchConsoleQuery[] {
   return rows
     .map<SearchConsoleQuery | null>((row) => {
       const [query, page] = row.keys ?? [];
-      if (!query) return null;
+      if (!query || isBrandQuery(query)) return null;
       return {
         query,
         page,
@@ -226,6 +253,7 @@ export async function getSearchConsoleOpportunities() {
         type: "web",
         rowLimit: 100,
       }),
+      signal: AbortSignal.timeout(15000),
     },
   );
 

@@ -5,6 +5,7 @@ import {
   ADMIN_SESSION_COOKIE,
   getAdminUserFromToken,
 } from "@/lib/admin-auth";
+import { checkRateLimit } from "@/lib/content-studio/rate-limit";
 
 function getSupabaseLoginClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -33,6 +34,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Email and password are required." },
         { status: 400 },
+      );
+    }
+
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    const limit = checkRateLimit(`login:${ip}:${email.toLowerCase()}`, 5);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again shortly." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limit.retryAfterSeconds) },
+        },
       );
     }
 
