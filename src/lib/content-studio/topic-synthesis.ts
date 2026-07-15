@@ -85,6 +85,11 @@ Rules for each idea:
 - "appAngle": one concrete way the finished article hooks the reader toward the Olfaire app.
 - "trafficPotential" and "difficulty": your best estimate. Favor high-traffic, low-difficulty topics.
 
+DIVERSITY (important):
+- The 10 ideas must span genuinely different territory. At most ONE idea may centre on any single fragrance note or material (oud, vanilla, rose, musk...). Do not let one material dominate the list.
+- Mix the formats: how-to, explainer, comparison, seasonal, collection-building, buying-decision.
+- The Search Console queries reflect the handful of terms the site happens to rank for today — they are context for spotting adjacent gaps, NOT a template. Do not simply return variations of them.
+
 Return ~10 ideas. Do not repeat topics already covered by the site's existing articles. Every idea must be distinct.`;
 
 function buildUserPrompt(signals: TopicSignals): string {
@@ -112,7 +117,10 @@ function buildUserPrompt(signals: TopicSignals): string {
     results("Recent fragrance news (Tavily)", signals.tavilyNews),
     results("General fragrance discussion (Tavily)", signals.tavilyGeneral),
     results("Reddit enthusiast discussion", signals.reddit),
-    section("Queries Olfaire already gets impressions for (Search Console)", signals.searchConsoleQueries),
+    section(
+      "Queries Olfaire already gets impressions for (Search Console) — context only, do NOT over-index on these",
+      signals.searchConsoleQueries,
+    ),
     section("Existing Olfaire articles — DO NOT duplicate these", signals.existingTitles),
     "\nReturn the JSON object of ideas.",
   ]

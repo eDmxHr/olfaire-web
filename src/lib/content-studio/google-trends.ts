@@ -7,13 +7,16 @@ export interface FragranceTrendSignals {
   interest: Record<string, number>;
 }
 
+// Deliberately spread across the fragrance space. Avoid seeding a single note
+// (oud, vanilla, ...) — a note-specific seed skews every downstream idea toward
+// that material.
 const SEED_KEYWORDS = [
   "perfume",
   "fragrance",
-  "oud",
-  "niche fragrance",
   "perfume dupes",
-  "best perfume",
+  "niche fragrance",
+  "perfume layering",
+  "long lasting perfume",
 ];
 
 const TRENDS_TIMEOUT_MS = 12000;
@@ -112,6 +115,17 @@ export async function getFragranceTrendSignals(): Promise<FragranceTrendSignals>
       // Ignore malformed payloads for a single seed.
     }
   });
+
+  if (!risingQueries.size) {
+    // Google Trends is an unofficial endpoint and commonly blocks datacenter
+    // IPs, so this is expected to fire on serverless hosts. Logged because the
+    // rising queries are the main source of topic diversity.
+    const reason = risingResults.find((r) => r.status === "rejected");
+    console.warn(
+      "Google Trends returned no rising queries; topic ideas lose their trend signal.",
+      reason && reason.status === "rejected" ? reason.reason : "",
+    );
+  }
 
   return {
     risingQueries: Array.from(risingQueries).slice(0, RISING_QUERIES_LIMIT),

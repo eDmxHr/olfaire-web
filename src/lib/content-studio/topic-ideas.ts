@@ -98,10 +98,12 @@ const fallbackIdeas: TopicIdea[] = [
   },
 ];
 
+// Keep these broad and note-agnostic. A query naming one material (e.g. oud)
+// drags every synthesized idea toward that material.
 const topicDiscoveryQueries = [
   "perfume fragrance questions guide collectors beginners",
   "fragrance layering skin chemistry storage perfume questions",
-  "oud perfume notes longevity sillage guide questions",
+  "designer vs niche perfume dupes value guide",
   "perfume notes longevity sillage seasonal fragrance guide",
 ];
 
@@ -115,7 +117,7 @@ const redditDiscoveryQueries = [
   "site:reddit.com/r/fragrance perfume layering question",
   "site:reddit.com/r/fragrance why does perfume not last",
   "site:reddit.com/r/Perfumes skin chemistry perfume question",
-  "site:reddit.com/r/fragrance oud perfume beginner question",
+  "site:reddit.com/r/fragrance beginner fragrance recommendations question",
   "site:reddit.com/r/Colognes signature scent question",
 ];
 
