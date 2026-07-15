@@ -2,6 +2,7 @@ import "server-only";
 
 import crypto from "crypto";
 import fs from "fs/promises";
+import os from "os";
 import path from "path";
 import { getAllPosts } from "@/lib/mdx";
 import { getFragranceTrendSignals } from "./google-trends";
@@ -37,7 +38,12 @@ interface TavilyTopicCache {
   queries: string[];
 }
 
-const CACHE_ROOT = path.join(process.cwd(), ".content-studio", "cache");
+// Serverless filesystems (Vercel) are read-only apart from the temp dir, so
+// cache there instead of the project root. /tmp survives warm invocations,
+// which is enough for a 24h TTL to still pay off.
+const CACHE_ROOT = process.env.VERCEL
+  ? path.join(os.tmpdir(), "content-studio", "cache")
+  : path.join(process.cwd(), ".content-studio", "cache");
 const TAVILY_TOPIC_CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 const TAVILY_TOPIC_CACHE_VERSION = "v4";
 
@@ -177,19 +183,25 @@ async function readTavilyTopicCache() {
 }
 
 async function writeTavilyTopicCache(ideas: TopicIdea[]) {
-  await fs.mkdir(CACHE_ROOT, { recursive: true });
-  await fs.writeFile(
-    tavilyTopicCachePath(),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        ideas,
-        queries: cacheQueries(),
-      } satisfies TavilyTopicCache,
-      null,
-      2,
-    )}\n`,
-  );
+  // Caching is best-effort: a write failure (read-only FS, full disk) must
+  // never discard the ideas we just paid to synthesize.
+  try {
+    await fs.mkdir(CACHE_ROOT, { recursive: true });
+    await fs.writeFile(
+      tavilyTopicCachePath(),
+      `${JSON.stringify(
+        {
+          generatedAt: new Date().toISOString(),
+          ideas,
+          queries: cacheQueries(),
+        } satisfies TavilyTopicCache,
+        null,
+        2,
+      )}\n`,
+    );
+  } catch {
+    // Ignore — the ideas are still returned to the caller.
+  }
 }
 
 interface RawTavilyResult {

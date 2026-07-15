@@ -118,7 +118,9 @@ export function EditorWorkspace({
     },
     onSuccess: (updated) => {
       setDraft(updated);
-      setMessage(`Published ${updated.slug}.mdx for Git review.`);
+      setMessage(
+        `Published ${updated.slug}.mdx to ${updated.publishedPath ?? "the repo"}. If committed to GitHub, the deploy rebuilds and it goes live in ~1-2 min.`,
+      );
       setError("");
     },
     onError: (publishError) => {

@@ -12,6 +12,7 @@ import type {
   DraftStatus,
   ResearchResult,
 } from "./types";
+import { commitBlogPost, isGitHubPublishingConfigured } from "./github";
 import { frontmatterToMdx, slugify } from "./utils";
 
 const BLOG_ROOT = path.join(process.cwd(), "src/content/blog");
@@ -282,12 +283,9 @@ export async function updateDraft(id: string, patch: DraftPatch) {
   return saveDraft(next);
 }
 
-export async function publishDraft(id: string) {
-  const draft = await getDraft(id);
-  const slug = slugify(draft.slug);
-  assertSafeSlug(slug);
-
+async function writeLocalBlogPost(slug: string, content: string) {
   const filePath = path.join(BLOG_ROOT, `${slug}.mdx`);
+
   try {
     await fs.access(filePath);
     throw new Error(`A blog article already exists at ${slug}.mdx.`);
@@ -296,6 +294,25 @@ export async function publishDraft(id: string) {
       throw error;
     }
   }
+
+  try {
+    await fs.writeFile(filePath, content, { flag: "wx" });
+  } catch (error) {
+    if (isStorageUnavailable(error)) {
+      throw new Error(
+        "Publishing requires a writable local project filesystem, or a configured GITHUB_TOKEN.",
+      );
+    }
+    throw error;
+  }
+
+  return filePath;
+}
+
+export async function publishDraft(id: string) {
+  const draft = await getDraft(id);
+  const slug = slugify(draft.slug);
+  assertSafeSlug(slug);
 
   const parsed = matter(frontmatterToMdx(draft.frontmatter, draft.mdx));
   const content = frontmatterToMdx(
@@ -309,23 +326,23 @@ export async function publishDraft(id: string) {
     parsed.content,
   );
 
-  try {
-    await fs.writeFile(filePath, content, { flag: "wx" });
-  } catch (error) {
-    if (isStorageUnavailable(error)) {
-      throw new Error(
-        "Publishing requires a writable local project filesystem.",
-      );
-    }
-    throw error;
-  }
+  // Prefer committing to GitHub so publishing works from the deployed studio
+  // (Vercel's filesystem is read-only). Falls back to a local write for
+  // tokenless local development.
+  const publishedPath = isGitHubPublishingConfigured()
+    ? await commitBlogPost(
+        slug,
+        content,
+        `content: publish ${slug}.mdx via Content Studio`,
+      )
+    : await writeLocalBlogPost(slug, content);
 
   const now = new Date().toISOString();
   return saveDraft({
     ...draft,
     status: "published",
     slug,
-    publishedPath: filePath,
+    publishedPath,
     publishedAt: now,
     updatedAt: now,
   });
