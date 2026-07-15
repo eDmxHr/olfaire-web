@@ -17,8 +17,6 @@ async function getIdeas() {
 
 function sourceLabel(source: TopicIdea["source"]) {
   switch (source) {
-    case "search_console":
-      return "Search Console";
     case "tavily":
       return "Trend synthesis";
     case "reddit":

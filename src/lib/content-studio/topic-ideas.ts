@@ -9,7 +9,7 @@ import { getFragranceTrendSignals } from "./google-trends";
 import { getSearchConsoleOpportunities } from "./search-console";
 import { synthesizeTopicIdeas } from "./topic-synthesis";
 
-type TopicIdeaSource = "search_console" | "tavily" | "reddit" | "fallback";
+type TopicIdeaSource = "tavily" | "reddit" | "fallback";
 
 export type SearchIntent =
   | "informational"
@@ -105,12 +105,16 @@ const topicDiscoveryQueries = [
   "fragrance layering skin chemistry storage perfume questions",
   "designer vs niche perfume dupes value guide",
   "perfume notes longevity sillage seasonal fragrance guide",
+  "fragrance flanker meaning guide worth buying",
+  "perfume gift guide starter collection guide",
 ];
 
 const newsDiscoveryQueries = [
   "new fragrance releases 2026 perfume launches",
   "trending perfumes viral tiktok fragrance",
   "fragrance industry news niche perfume trends",
+  "new perfume flanker announcement 2026",
+  "fragrance house brand collaboration celebrity launch",
 ];
 
 const redditDiscoveryQueries = [
@@ -304,30 +308,16 @@ export async function getTopicIdeas() {
 
   try {
     const searchConsole = await getSearchConsoleOpportunities();
+    // Search Console queries are passed to synthesis as context only (below)
+    // — they are NOT turned into standalone ideas here. They reflect the
+    // handful of terms the site currently ranks for (today, almost entirely
+    // "oud"), so injecting them directly dominates the list with real
+    // impression-scored duplicates of what the SEO Opportunities panel
+    // already surfaces with its own "Research this keyword" action.
     searchConsoleQueries.push(
       ...searchConsole.opportunities.map((item) => item.query),
       ...searchConsole.topQueries.map((item) => item.query),
     );
-    const searchIdeas = [
-      ...searchConsole.opportunities.map((item) => ({
-        keyword: item.query,
-        angle: item.reason,
-        source: "search_console" as const,
-        score: item.impressions + Math.max(0, 30 - item.position),
-      })),
-      ...searchConsole.topQueries.map((item) => ({
-        keyword: item.query,
-        angle: "Search Console is already showing Olfaire for this query.",
-        source: "search_console" as const,
-        score: item.impressions + item.clicks * 10,
-      })),
-    ];
-
-    for (const idea of searchIdeas) {
-      if (!hasExistingCoverage(idea.keyword)) {
-        addIdea(ideas, idea);
-      }
-    }
   } catch {
     // Search Console is optional; Tavily and fallback ideas keep the panel useful.
   }
